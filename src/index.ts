@@ -1,0 +1,1 @@
+export { Humanize } from './humanize';
