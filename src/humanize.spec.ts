@@ -44,3 +44,12 @@ describe('before', () => {
         expect(result).to.equal('1 minut efter');
     });
 });
+
+describe('duration', () => {
+    it('should return "siden" when diffNow() is used', () => {
+        const past = DateTime.local(2000, 1, 1);
+        const result = Humanize.duration(past.diffNow(), 'ago');
+        
+        expect(result).to.contain('siden');
+    });
+});

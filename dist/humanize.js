@@ -10,12 +10,11 @@ export class Humanize {
         return Humanize.distance(date, base || DateTime.utc(), 'before');
     }
     static distance(date, base, suffix) {
-        let duration = base.toUTC().diff(date.toUTC());
-        return Humanize.duration(duration, suffix);
+        return Humanize.duration(date.diff(base), suffix);
     }
     static duration(duration, suffix) {
         let now = DateTime.utc();
-        let date = now.minus(duration).toJSDate();
+        let date = now.plus(duration).toJSDate();
         let base = now.toJSDate();
         let result = formatDistance(date, base, { includeSeconds: true, locale: da });
         if (suffix) {

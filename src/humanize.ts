@@ -15,14 +15,12 @@ export class Humanize {
     }
 
     static distance(date: DateTime, base: DateTime, suffix?: 'ago' | 'before') {
-        let duration = base.toUTC().diff(date.toUTC());
-
-        return Humanize.duration(duration, suffix);
+        return Humanize.duration(date.diff(base), suffix);
     }
 
     static duration(duration: Duration, suffix?: 'ago' | 'before') {
         let now = DateTime.utc();
-        let date = now.minus(duration).toJSDate();
+        let date = now.plus(duration).toJSDate();
         let base = now.toJSDate();
 
         let result = formatDistance(date, base, { includeSeconds: true, locale: da });
