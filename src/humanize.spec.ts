@@ -1,6 +1,43 @@
-import { DateTime } from 'luxon';
+import { DateTime, Settings } from 'luxon';
+
 import { Humanize } from './humanize';
 import { expect } from 'chai';
+
+describe('default', () => {
+    let now = DateTime.local(2018, 1, 1, 8, 0, 0);
+    
+    before('set now', () => {
+        Settings.now = () => now.valueOf();
+    });
+
+    it('should return X minutter siden when within an hour', () => {       
+        const minutesBefore = now.minus({ minutes: 30 });
+        const result = Humanize.default(minutesBefore);
+        
+        expect(result).to.equal('30 minutter siden');
+    });
+
+    it('should return a time when within same day', () => {
+        const hoursBefore = now.minus({ hours: 3 });
+        const result = Humanize.default(hoursBefore);
+        
+        expect(result).to.equal('05:00');
+    });
+
+    it('should return X dage siden when within 7 days', () => {
+        const fewDaysBefore = now.minus({ days: 3 });
+        const result = Humanize.default(fewDaysBefore);
+        
+        expect(result).to.equal('3 dage siden');
+    });
+
+    it('should return a date otherwise', () => {
+        const manyDaysBefore = now.minus({ days: 8 });
+        const result = Humanize.default(manyDaysBefore);
+        
+        expect(result).to.equal('24/12/2017');
+    });
+});
 
 describe('ago', () => {
     it('should return 1 minut siden', () => {

@@ -4,6 +4,27 @@ import { compareAsc, formatDistance } from 'date-fns/esm';
 import { da } from 'date-fns/esm/locale';
 
 export class Humanize {
+    static default(date: DateTime) {
+        let diff = date.diffNow();
+
+        if (Math.abs(diff.as('hours')) < 1) {
+            // Within an hour
+            return Humanize.ago(date);
+        }
+        else if (DateTime.local().hasSame(date, 'day')) {
+            // Within present day: time only
+            return date.toLocaleString(DateTime.TIME_SIMPLE);
+        }
+        else if (Math.abs(diff.as('days')) < 7) {
+            // Within +- 7 days
+            return Humanize.ago(date);
+        }
+        else {
+            // Else: date only
+            return date.toLocaleString(DateTime.DATE_MED);
+        }
+    }
+
     static ago(date: DateTime, base?: DateTime) {
         return Humanize.distance(date, base || DateTime.utc(), 'ago');
     }
