@@ -3,6 +3,12 @@ import { compareAsc, formatDistance } from 'date-fns/esm';
 
 import { da } from 'date-fns/esm/locale';
 
+let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED));
+delete DATETIME_MED_WITHOUT_YEAR.year;
+
+let DATE_MED_WITHOUT_NOYEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
+delete DATE_MED_WITHOUT_NOYEAR.year;
+
 export class Humanize {
     static default(date: DateTime) {
         let diff = date.diffNow();
@@ -50,21 +56,70 @@ export class Humanize {
             switch (suffix) {
                 case 'ago':
                     if (comparison > 0) {
-                        return 'om ' + result;
+                        return `om ${result}`;
                     }
                     else {
-                        return result + ' siden';
+                        return `${result} siden`;
                     }
                 case 'before':
                     if (comparison > 0) {
-                        return result + ' efter';
+                        return `${result} efter`;
                     }
                     else {
-                        return result + ' før';
+                        return `${result} før`;
                     }
             }
         }
 
         return result;
+    }
+
+    static period(earliest: DateTime, latest: DateTime) {
+        let earliestStartOfDay = earliest.toLocal().startOf('day');
+        let latestStartOfDay = latest.toLocal().startOf('day');
+
+        let hourComponentExists = !earliest.equals(earliestStartOfDay) || !latest.equals(latestStartOfDay);
+
+        let earliestFormat: Intl.DateTimeFormatOptions;
+        let latestFormat: Intl.DateTimeFormatOptions;
+
+        if (earliest.hasSame(latest, 'day')) {
+            if (earliest.hasSame(DateTime.utc(), 'day')) {
+                // Different times today
+                earliestFormat = DateTime.TIME_SIMPLE;
+                latestFormat = DateTime.TIME_SIMPLE;
+            }
+            else {
+                // Different times on same day but not today
+                earliestFormat = DateTime.DATETIME_MED;
+                latestFormat = DateTime.TIME_SIMPLE;
+            }
+        }
+        else if (earliest.hasSame(latest, 'year')) {
+            if (hourComponentExists) {
+                // Different times in same year
+                earliestFormat = DateTime.DATETIME_MED;
+                latestFormat = DATETIME_MED_WITHOUT_YEAR;
+            }
+            else {
+                // Different dates in same year
+                earliestFormat = DateTime.DATE_MED;
+                latestFormat = DATE_MED_WITHOUT_NOYEAR;
+            }
+        }
+        else {
+            if (hourComponentExists) {
+                // Different times in different years
+                earliestFormat = DateTime.DATETIME_MED;
+                latestFormat = DateTime.DATETIME_MED;
+            }
+            else {
+                // Different dates in different years
+                earliestFormat = DateTime.DATE_MED;
+                latestFormat = DateTime.DATE_MED;
+            }
+        }
+
+        return `fra ${earliest.toLocaleString(earliestFormat)} til ${latest.toLocaleString(latestFormat)}`;
     }
 }

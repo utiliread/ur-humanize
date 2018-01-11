@@ -21,7 +21,7 @@ describe('default', () => {
         const hoursBefore = now.minus({ hours: 3 });
         const result = Humanize.default(hoursBefore);
         
-        expect(result).to.equal('05:00');
+        expect(result).to.equal('05.00');
     });
 
     it('should return X dage siden when within 7 days', () => {
@@ -35,7 +35,7 @@ describe('default', () => {
         const manyDaysBefore = now.minus({ days: 8 });
         const result = Humanize.default(manyDaysBefore);
         
-        expect(result).to.equal('24/12/2017');
+        expect(result).to.equal('24. dec. 2017');
     });
 });
 
@@ -90,3 +90,59 @@ describe('duration', () => {
         expect(result).to.contain('siden');
     });
 });
+
+describe('period', () => {
+    let now = DateTime.local(2018, 1, 1, 8, 0, 0);
+
+    before('set now', () => {
+        Settings.now = () => now.valueOf();
+    });
+
+    it('should return different times today', () => {
+        const earliest = DateTime.local(2018, 1, 1, 3, 0, 0);
+        const latest = DateTime.local(2018, 1, 1, 14, 0, 0);
+        const result = Humanize.period(earliest, latest);
+        
+        expect(result).to.be.equal('fra 03.00 til 14.00');
+    });
+
+    it('should return different times on same day but not today', () => {
+        const earliest = DateTime.local(2018, 1, 2, 3, 0, 0);
+        const latest = DateTime.local(2018, 1, 2, 14, 0, 0);
+        const result = Humanize.period(earliest, latest);
+        
+        expect(result).to.be.equal('fra 2. jan. 2018 03.00 til 14.00');
+    });
+
+    it('should return different times in same year', () => {
+        const earliest = DateTime.local(2018, 1, 1, 3, 0, 0);
+        const latest = DateTime.local(2018, 1, 2, 14, 0, 0);
+        const result = Humanize.period(earliest, latest);
+        
+        expect(result).to.be.equal('fra 1. jan. 2018 03.00 til 2. jan. 14.00');
+    });
+
+    it('should return different dates in same year', () => {
+        const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
+        const latest = DateTime.local(2018, 1, 2, 0, 0, 0);
+        const result = Humanize.period(earliest, latest);
+        
+        expect(result).to.be.equal('fra 1. jan. 2018 til 2. jan.');
+    });
+
+    it('should return different times in different years', () => {
+        const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
+        const latest = DateTime.local(2019, 1, 1, 1, 0, 0);
+        const result = Humanize.period(earliest, latest);
+        
+        expect(result).to.be.equal('fra 1. jan. 2018 00.00 til 1. jan. 2019 01.00');
+    });
+
+    it('should return different dates in different years', () => {
+        const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
+        const latest = DateTime.local(2019, 1, 1, 0, 0, 0);
+        const result = Humanize.period(earliest, latest);
+        
+        expect(result).to.be.equal('fra 1. jan. 2018 til 1. jan. 2019');
+    });
+})
