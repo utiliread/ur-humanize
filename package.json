@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc && copyfiles -u 2 dist/format/* format",
     "test": "mocha -r ./ts-babel-register.js --icu-data-dir=./node_modules/full-icu src/**/*.spec.ts",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist format"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.37",
