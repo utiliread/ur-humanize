@@ -1,7 +1,7 @@
-import 'date-fns/esm/locale/da';
 import { DateTime } from 'luxon';
-import { compareAsc, formatDistance } from 'date-fns/esm';
-import { da } from 'date-fns/esm/locale';
+import compareAsc from 'date-fns/esm/compareAsc';
+import da from 'date-fns/esm/locale/da';
+import formatDistance from 'date-fns/esm/formatDistance';
 export class Humanize {
     static ago(date, base) {
         return Humanize.distance(date, base || DateTime.utc(), 'ago');

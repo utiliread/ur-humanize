@@ -1,5 +1,4 @@
 /// <reference types="luxon" />
-import 'date-fns/esm/locale/da';
 import { DateTime, Duration } from 'luxon';
 export declare class Humanize {
     static ago(date: DateTime, base?: DateTime): string;
