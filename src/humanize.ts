@@ -1,8 +1,7 @@
 import { DateTime, Duration } from 'luxon';
+import { compareAsc, formatDistance } from 'date-fns/esm';
 
-import compareAsc from 'date-fns/esm/compareAsc';
-import da from 'date-fns/esm/locale/da';
-import formatDistance from 'date-fns/esm/formatDistance';
+import { da } from 'date-fns/esm/locale';
 
 export class Humanize {
     static ago(date: DateTime, base?: DateTime) {
@@ -23,7 +22,7 @@ export class Humanize {
         let base = now.toJSDate();
 
         let result = formatDistance(date, base, { includeSeconds: true, locale: da });
-        
+
         if (suffix) {
             let comparison = compareAsc(date, base);
 
@@ -44,7 +43,7 @@ export class Humanize {
                     }
             }
         }
-        
+
         return result;
     }
 }
