@@ -6,7 +6,7 @@ export function reformat(format, from, to) {
     }
     let sourceTokens = getSortedSourceTokens(from, to);
     for (let sourceToken of sourceTokens) {
-        // Replace token with a temporary placeholder, e.g. '{year-4}'
+        // Replace token with a temporary placeholder, e.g. '{7}'
         format = format.replace(new RegExp(sourceToken.value, 'g'), `{${sourceToken.id}}`);
     }
     for (let sourceToken of sourceTokens) {

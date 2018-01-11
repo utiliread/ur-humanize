@@ -10,7 +10,7 @@ let DATE_MED_WITHOUT_NOYEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
 delete DATE_MED_WITHOUT_NOYEAR.year;
 
 export class Humanize {
-    static default(date: DateTime) {
+    static default(date: DateTime, includeTime?: boolean) {
         let diff = date.diffNow();
 
         if (Math.abs(diff.as('hours')) < 1) {
@@ -24,6 +24,10 @@ export class Humanize {
         else if (Math.abs(diff.as('days')) < 7) {
             // Within +- 7 days
             return Humanize.ago(date);
+        }
+        else if (!!includeTime) {
+            // Else, but time is required: date and time
+            return date.toLocaleString(DateTime.DATETIME_MED);
         }
         else {
             // Else: date only
