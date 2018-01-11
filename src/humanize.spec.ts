@@ -31,13 +31,6 @@ describe('default', () => {
         expect(result).to.equal('3 dage siden');
     });
 
-    it('should return date and time if requested explicitly', () => {
-        const manyDaysBefore = now.minus({ days: 8 });
-        const result = Humanize.default(manyDaysBefore, true);
-        
-        expect(result).to.equal('24. dec. 2017 08.00');
-    });
-
     it('should return a date otherwise', () => {
         const manyDaysBefore = now.minus({ days: 8 });
         const result = Humanize.default(manyDaysBefore);
@@ -71,11 +64,11 @@ describe('ago', () => {
     });
 });
 
-describe('before', () => {
+describe('relative', () => {
     it('should return 1 minut før', () => {
         const base = DateTime.local(2018, 1, 1);
         const aMinuteBefore = base.minus({ minutes: 1 });
-        const result = Humanize.before(aMinuteBefore, base);
+        const result = Humanize.relative(aMinuteBefore, base);
         
         expect(result).to.equal('1 minut før');
     });
@@ -83,7 +76,7 @@ describe('before', () => {
     it('should return 1 minut efter', () => {
         const base = DateTime.local(2018, 1, 1);
         const aMinuteAfter = base.plus({ minutes: 1 });
-        const result = Humanize.before(aMinuteAfter, base);
+        const result = Humanize.relative(aMinuteAfter, base);
         
         expect(result).to.equal('1 minut efter');
     });
@@ -152,4 +145,4 @@ describe('period', () => {
         
         expect(result).to.be.equal('fra 1. jan. 2018 til 1. jan. 2019');
     });
-})
+});

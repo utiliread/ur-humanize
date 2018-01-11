@@ -1,12 +1,11 @@
 import { DateTime } from 'luxon';
-import { compareAsc, formatDistance } from 'date-fns/esm';
-import { da } from 'date-fns/esm/locale';
+import { en as defaultLocale } from './locale';
 let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED));
 delete DATETIME_MED_WITHOUT_YEAR.year;
 let DATE_MED_WITHOUT_NOYEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
 delete DATE_MED_WITHOUT_NOYEAR.year;
 export class Humanize {
-    static default(date, includeTime) {
+    static default(date) {
         let diff = date.diffNow();
         if (Math.abs(diff.as('hours')) < 1) {
             // Within an hour
@@ -20,10 +19,6 @@ export class Humanize {
             // Within +- 7 days
             return Humanize.ago(date);
         }
-        else if (!!includeTime) {
-            // Else, but time is required: date and time
-            return date.toLocaleString(DateTime.DATETIME_MED);
-        }
         else {
             // Else: date only
             return date.toLocaleString(DateTime.DATE_MED);
@@ -32,37 +27,17 @@ export class Humanize {
     static ago(date, base) {
         return Humanize.distance(date, base || DateTime.utc(), 'ago');
     }
-    static before(date, base) {
-        return Humanize.distance(date, base || DateTime.utc(), 'before');
-    }
-    static distance(date, base, suffix) {
-        return Humanize.duration(date.diff(base), suffix);
+    static relative(date, base) {
+        return Humanize.distance(date, base || DateTime.utc(), 'relative');
     }
     static duration(duration, suffix) {
-        let now = DateTime.utc();
-        let date = now.plus(duration).toJSDate();
-        let base = now.toJSDate();
-        let result = formatDistance(date, base, { includeSeconds: true, locale: da });
-        if (suffix) {
-            let comparison = compareAsc(date, base);
-            switch (suffix) {
-                case 'ago':
-                    if (comparison > 0) {
-                        return `om ${result}`;
-                    }
-                    else {
-                        return `${result} siden`;
-                    }
-                case 'before':
-                    if (comparison > 0) {
-                        return `${result} efter`;
-                    }
-                    else {
-                        return `${result} før`;
-                    }
-            }
-        }
-        return result;
+        let base = DateTime.utc();
+        let date = base.plus(duration);
+        return Humanize.distance(date, base, suffix);
+    }
+    static distance(date, base, suffix) {
+        let locale = getLocale(date);
+        return locale.fmtDistance(date, base, suffix);
     }
     static period(earliest, latest) {
         let earliestStartOfDay = earliest.toLocal().startOf('day');
@@ -106,6 +81,23 @@ export class Humanize {
                 latestFormat = DateTime.DATE_MED;
             }
         }
-        return `fra ${earliest.toLocaleString(earliestFormat)} til ${latest.toLocaleString(latestFormat)}`;
+        let locale = getLocale(earliest);
+        return locale.fmtPeriod(earliest, earliestFormat, latest, latestFormat);
     }
+}
+let localeCache = {};
+function getLocale(date) {
+    let twoLetterCode = date.locale.substr(0, 2);
+    if (twoLetterCode in localeCache) {
+        return localeCache[twoLetterCode];
+    }
+    let locale;
+    try {
+        locale = require('./locale/' + twoLetterCode).default;
+    }
+    catch (error) {
+        locale = defaultLocale;
+    }
+    localeCache[twoLetterCode] = locale;
+    return locale;
 }

@@ -16,6 +16,7 @@
     "@types/chai": "^4.1.0",
     "@types/luxon": "^0.2.2",
     "@types/mocha": "^2.2.46",
+    "@types/node": "^9.3.0",
     "chai": "^4.1.2",
     "copyfiles": "^1.2.0",
     "cross-env": "^5.1.3",
