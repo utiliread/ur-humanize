@@ -36,9 +36,6 @@ export class Humanize {
                     }
             }
         }
-        if (suffix === 'before') {
-            result = result.replace('siden', 'før').replace('om', 'efter');
-        }
         return result;
     }
 }
