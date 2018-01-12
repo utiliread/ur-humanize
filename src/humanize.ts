@@ -1,7 +1,6 @@
 import { DateTime, Duration } from 'luxon';
-import { HumanizeLocale, en as defaultLocale } from './locale';
 
-import { FormatSuffix } from './format-suffix';
+import { getLocale } from './locale';
 
 let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED));
 delete DATETIME_MED_WITHOUT_YEAR.year;
@@ -9,121 +8,86 @@ delete DATETIME_MED_WITHOUT_YEAR.year;
 let DATE_MED_WITHOUT_NOYEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
 delete DATE_MED_WITHOUT_NOYEAR.year;
 
-export class Humanize {
-    static default(date: DateTime) {
-        let diff = date.diffNow();
+export function relevantTime(instant: DateTime) {
+    let diff = instant.diffNow();
 
-        if (Math.abs(diff.as('hours')) < 1) {
-            // Within an hour
-            return Humanize.ago(date);
-        }
-        else if (DateTime.local().hasSame(date, 'day')) {
-            // Within present day: time only
-            return date.toLocaleString(DateTime.TIME_SIMPLE);
-        }
-        else if (Math.abs(diff.as('days')) < 7) {
-            // Within +- 7 days
-            return Humanize.ago(date);
-        }
-        else {
-            // Else: date only
-            return date.toLocaleString(DateTime.DATE_MED);
-        }
+    if (Math.abs(diff.as('hours')) < 1) {
+        // Within an hour
+        return timeAgo(instant);
     }
-
-    static ago(date: DateTime, base?: DateTime) {
-        return Humanize.distance(date, base || DateTime.utc(), 'ago');
+    else if (DateTime.local().hasSame(instant, 'day')) {
+        // Within present day: time only
+        return instant.toLocaleString(DateTime.TIME_SIMPLE);
     }
-
-    static relative(date: DateTime, base: DateTime) {
-        return Humanize.distance(date, base || DateTime.utc(), 'relative');
+    else if (Math.abs(diff.as('days')) < 7) {
+        // Within +- 7 days
+        return timeAgo(instant);
     }
-
-    static duration(duration: Duration, suffix?: FormatSuffix) {
-        let base = DateTime.utc();
-        let date = base.plus(duration);
-
-        return Humanize.distance(date, base, suffix);
-    }
-
-    static distance(date: DateTime, base: DateTime, suffix?: FormatSuffix) {
-        let locale = getLocale(date);
-
-        return locale.fmtDistance(date, base, suffix);
-    }
-
-    static period(earliest: DateTime, latest: DateTime) {
-        let earliestStartOfDay = earliest.toLocal().startOf('day');
-        let latestStartOfDay = latest.toLocal().startOf('day');
-
-        let hourComponentExists = !earliest.equals(earliestStartOfDay) || !latest.equals(latestStartOfDay);
-
-        let earliestFormat: Intl.DateTimeFormatOptions;
-        let latestFormat: Intl.DateTimeFormatOptions;
-
-        if (earliest.hasSame(latest, 'day')) {
-            if (earliest.hasSame(DateTime.utc(), 'day')) {
-                // Different times today
-                earliestFormat = DateTime.TIME_SIMPLE;
-                latestFormat = DateTime.TIME_SIMPLE;
-            }
-            else {
-                // Different times on same day but not today
-                earliestFormat = DateTime.DATETIME_MED;
-                latestFormat = DateTime.TIME_SIMPLE;
-            }
-        }
-        else if (earliest.hasSame(latest, 'year')) {
-            if (hourComponentExists) {
-                // Different times in same year
-                earliestFormat = DateTime.DATETIME_MED;
-                latestFormat = DATETIME_MED_WITHOUT_YEAR;
-            }
-            else {
-                // Different dates in same year
-                earliestFormat = DateTime.DATE_MED;
-                latestFormat = DATE_MED_WITHOUT_NOYEAR;
-            }
-        }
-        else {
-            if (hourComponentExists) {
-                // Different times in different years
-                earliestFormat = DateTime.DATETIME_MED;
-                latestFormat = DateTime.DATETIME_MED;
-            }
-            else {
-                // Different dates in different years
-                earliestFormat = DateTime.DATE_MED;
-                latestFormat = DateTime.DATE_MED;
-            }
-        }
-
-        let locale = getLocale(earliest);
-
-        return locale.fmtPeriod(earliest, earliestFormat, latest, latestFormat);
+    else {
+        // Else: date only
+        return instant.toLocaleString(DateTime.DATE_MED);
     }
 }
 
-let localeCache: {[twoLetterCode: string]: HumanizeLocale} = {};
+export function timeAgo(instant: DateTime, base?: DateTime) {
+    let locale = getLocale(instant);
 
+    return locale.fmtDistance(instant, base || DateTime.utc(), 'ago');
+}
 
-function getLocale(date: DateTime) {
-    let twoLetterCode = date.locale.substr(0, 2);
-    
-    if (twoLetterCode in localeCache) {
-        return localeCache[twoLetterCode];
+export function relativeTime(instant: DateTime, base: DateTime) {
+    let locale = getLocale(instant);
+
+    return locale.fmtDistance(instant, base || DateTime.utc(), 'relative');
+}
+
+export function timeDifference(earliest: DateTime, latest: DateTime) {
+    let earliestStartOfDay = earliest.toLocal().startOf('day');
+    let latestStartOfDay = latest.toLocal().startOf('day');
+
+    let hourComponentExists = !earliest.equals(earliestStartOfDay) || !latest.equals(latestStartOfDay);
+
+    let earliestFormat: Intl.DateTimeFormatOptions;
+    let latestFormat: Intl.DateTimeFormatOptions;
+
+    if (earliest.hasSame(latest, 'day')) {
+        if (earliest.hasSame(DateTime.utc(), 'day')) {
+            // Different times today
+            earliestFormat = DateTime.TIME_SIMPLE;
+            latestFormat = DateTime.TIME_SIMPLE;
+        }
+        else {
+            // Different times on same day but not today
+            earliestFormat = DateTime.DATETIME_MED;
+            latestFormat = DateTime.TIME_SIMPLE;
+        }
+    }
+    else if (earliest.hasSame(latest, 'year')) {
+        if (hourComponentExists) {
+            // Different times in same year
+            earliestFormat = DateTime.DATETIME_MED;
+            latestFormat = DATETIME_MED_WITHOUT_YEAR;
+        }
+        else {
+            // Different dates in same year
+            earliestFormat = DateTime.DATE_MED;
+            latestFormat = DATE_MED_WITHOUT_NOYEAR;
+        }
+    }
+    else {
+        if (hourComponentExists) {
+            // Different times in different years
+            earliestFormat = DateTime.DATETIME_MED;
+            latestFormat = DateTime.DATETIME_MED;
+        }
+        else {
+            // Different dates in different years
+            earliestFormat = DateTime.DATE_MED;
+            latestFormat = DateTime.DATE_MED;
+        }
     }
 
-    let locale: HumanizeLocale;
- 
-    try {
-        locale = require('./locale/' + twoLetterCode).default;
-    }
-    catch (error) {
-        locale = defaultLocale;
-    }
+    let locale = getLocale(earliest);
 
-    localeCache[twoLetterCode] = locale;
-
-    return locale;
+    return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
 }
