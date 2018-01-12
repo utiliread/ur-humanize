@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Locale } from './locale/locale';
+import { Locale } from './locale';
 import { default as defaultHumanizeLocale } from './locale/en';
 
 const cache: {[localeId: string]: Locale} = {};

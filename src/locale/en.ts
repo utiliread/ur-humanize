@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Locale } from './locale';
+import { Locale } from '../locale';
 import { enUS } from 'date-fns/esm/locale';
 import { formatDistance } from 'date-fns/esm';
 
