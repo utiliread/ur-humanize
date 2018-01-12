@@ -7,7 +7,7 @@ export function getLocale(date) {
 }
 export function loadLocale(locale) {
     const localeId = makeLocaleId(locale || DateTime.local().locale);
-    return import('./locale/' + localeId)
+    return import(/* webpackChunkName: "lang-[request]" */ `./locale/${localeId}`)
         .catch(() => defaultHumanizeLocale)
         .then(loaded => {
         let loadedLocale = 'default' in loaded ? loaded.default : loaded;
