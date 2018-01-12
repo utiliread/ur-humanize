@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
-import { HumanizeLocale } from './humanize-locale';
+import { Locale } from './locale';
 import { enUS } from 'date-fns/esm/locale';
 import { formatDistance } from 'date-fns/esm';
 
-const locale: HumanizeLocale = {
+const locale: Locale = {
     fmtDistance: (date: DateTime, base: DateTime, suffix?: 'ago' | 'relative') => {
         let result = formatDistance(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: enUS });
 

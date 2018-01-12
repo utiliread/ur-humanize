@@ -1,6 +1,6 @@
 import { DateTime, Duration } from 'luxon';
 
-import { getLocale } from './locale';
+import { getLocale } from './locale-cache';
 
 let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED));
 delete DATETIME_MED_WITHOUT_YEAR.year;

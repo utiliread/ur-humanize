@@ -2,7 +2,7 @@ import { DateTime, Settings } from 'luxon';
 import { exactPeriod, exactTime, relativeTime, relaxedTime, timeAgo } from './humanize';
 
 import { expect } from 'chai';
-import { loadLocale } from './locale/index';
+import { loadLocale } from './locale-cache';
 
 before('set default locale', async () => {
     Settings.defaultLocale = 'da';
