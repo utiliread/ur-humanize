@@ -1,5 +1,5 @@
 import { DateTime, Settings } from 'luxon';
-import { exactPeriod, exactTime, relativeTime, relaxedTime, timeAgo } from './humanize';
+import { exactPeriod, exactTime, relativeTime, relaxedTime, timeAgo, timeSpan } from './humanize';
 
 import { expect } from 'chai';
 import { loadLocale } from './locale-cache';
@@ -50,6 +50,16 @@ describe('relativeTime', () => {
         const result = relativeTime(aMinuteAfter, base);
         
         expect(result).to.equal('1 minut efter');
+    });
+});
+
+describe('timeSpan', () => {
+    it('should return 1 minut', () => {
+        const earliest = DateTime.local(2018, 1, 1);
+        const latest = earliest.plus({ minutes: 1 });
+        const result = timeSpan(earliest, latest);
+        
+        expect(result).to.equal('1 minut');
     });
 });
 

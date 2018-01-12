@@ -10,7 +10,11 @@ export function timeAgo(instant, base) {
 }
 export function relativeTime(instant, base) {
     let locale = getLocale(instant);
-    return locale.fmtDistance(instant, base || DateTime.utc(), 'relative');
+    return locale.fmtDistance(instant, base, 'relative');
+}
+export function timeSpan(earliest, latest) {
+    let locale = getLocale(earliest);
+    return locale.fmtDistance(earliest, latest);
 }
 export function relaxedTime(instant) {
     let diff = instant.diffNow();

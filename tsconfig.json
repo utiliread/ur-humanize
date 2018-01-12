@@ -20,6 +20,6 @@
     ],
     "files": [
         "src/index.ts",
-        "src/locale/all.ts",
+        "src/locale/all.ts"
     ]
 }
