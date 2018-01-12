@@ -4,18 +4,46 @@ let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED)
 delete DATETIME_MED_WITHOUT_YEAR.year;
 let DATE_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
 delete DATE_MED_WITHOUT_YEAR.year;
+/**
+ * Format a text that looks like '1 minute ago'
+ * @param instant The instant
+ * @param base The base time
+ */
 export function timeAgo(instant, base) {
-    let locale = getLocale(instant);
+    let locale = getLocale(instant.locale);
     return locale.fmtDistance(instant, base || DateTime.utc(), 'ago');
 }
+/**
+ * Format a text that looks like '1 minute before'
+ * @param instant The instant
+ * @param base The base time
+ */
 export function relativeTime(instant, base) {
-    let locale = getLocale(instant);
+    let locale = getLocale(instant.locale);
     return locale.fmtDistance(instant, base, 'relative');
 }
-export function timeSpan(earliest, latest) {
-    let locale = getLocale(earliest);
-    return locale.fmtDistance(earliest, latest);
+/**
+ * Format a text that looks like '1 minute'
+ * @param instant1 One instant
+ * @param instant2 Another instant
+ */
+export function timeSpan(instant1, instant2) {
+    let locale = getLocale(instant1.locale);
+    return locale.fmtDistance(instant1, instant2);
 }
+/**
+ * Format a text that looks like '1 minute'
+ * @param duration The duration
+ */
+export function durationSpan(duration) {
+    let locale = getLocale(duration.locale);
+    let base = DateTime.local();
+    return locale.fmtDistance(base, base.plus(duration));
+}
+/**
+ * Format a text that looses precision dependening on the time from now
+ * @param instant The instant
+ */
 export function relaxedTime(instant) {
     let diff = instant.diffNow();
     if (Math.abs(diff.as('hours')) < 1) {
@@ -35,6 +63,10 @@ export function relaxedTime(instant) {
         return instant.toLocaleString(DateTime.DATE_MED);
     }
 }
+/**
+ * Format the shortest exact text describing an instant
+ * @param instant The instant
+ */
 export function exactTime(instant) {
     let startOfDay = instant.toLocal().startOf('day');
     let hasHourComponent = +instant !== +startOfDay;
@@ -68,6 +100,11 @@ export function exactTime(instant) {
     }
     return instant.toLocaleString(format);
 }
+/**
+ * Format the shortest exact text describing a period
+ * @param earliest The earliest instant
+ * @param latest The latest instant
+ */
 export function exactPeriod(earliest, latest) {
     let earliestStartOfDay = earliest.toLocal().startOf('day');
     let latestStartOfDay = latest.toLocal().startOf('day');
@@ -127,6 +164,6 @@ export function exactPeriod(earliest, latest) {
             latestFormat = DateTime.DATE_MED;
         }
     }
-    let locale = getLocale(earliest);
+    let locale = getLocale(earliest.locale);
     return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
 }

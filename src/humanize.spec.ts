@@ -1,5 +1,5 @@
-import { DateTime, Settings } from 'luxon';
-import { exactPeriod, exactTime, relativeTime, relaxedTime, timeAgo, timeSpan } from './humanize';
+import { DateTime, Duration, Settings } from 'luxon';
+import { durationSpan, exactPeriod, exactTime, relativeTime, relaxedTime, timeAgo, timeSpan } from './humanize';
 
 import { expect } from 'chai';
 import { loadLocale } from './locale-cache';
@@ -58,6 +58,22 @@ describe('timeSpan', () => {
         const earliest = DateTime.local(2018, 1, 1);
         const latest = earliest.plus({ minutes: 1 });
         const result = timeSpan(earliest, latest);
+        
+        expect(result).to.equal('1 minut');
+    });
+});
+
+describe('durationSpan', () => {
+    it('should return 1 minut when positive', () => {
+        const duration = Duration.fromObject({minutes: 1});
+        const result = durationSpan(duration);
+        
+        expect(result).to.equal('1 minut');
+    });
+
+    it('should return 1 minut when negative', () => {
+        const duration = Duration.fromObject({minutes: -1});
+        const result = durationSpan(duration);
         
         expect(result).to.equal('1 minut');
     });

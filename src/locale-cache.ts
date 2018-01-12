@@ -4,8 +4,8 @@ import { default as defaultHumanizeLocale } from './locale/en';
 
 const cache: {[localeId: string]: Locale} = {};
 
-export function getLocale(date: DateTime) {
-    let localeId = makeLocaleId(date.locale);
+export function getLocale(locale: string) {
+    let localeId = makeLocaleId(locale);
     return cache[localeId] || defaultHumanizeLocale;
 }
 

@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import { default as defaultHumanizeLocale } from './locale/en';
 const cache = {};
-export function getLocale(date) {
-    let localeId = makeLocaleId(date.locale);
+export function getLocale(locale) {
+    let localeId = makeLocaleId(locale);
     return cache[localeId] || defaultHumanizeLocale;
 }
 export function loadLocale(locale) {
