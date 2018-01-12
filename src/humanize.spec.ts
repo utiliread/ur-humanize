@@ -2,9 +2,12 @@ import { DateTime, Settings } from 'luxon';
 import { relativeTime, relevantTime, timeAgo, timePeriod } from './humanize';
 
 import { expect } from 'chai';
+import { loadLocale } from './locale/index';
 
-before('set default locale', () => {
+before('set default locale', async () => {
     Settings.defaultLocale = 'da';
+
+    await loadLocale();
 });
 
 describe('relevantTime', () => {

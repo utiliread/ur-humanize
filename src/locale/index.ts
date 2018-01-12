@@ -1,30 +1,27 @@
-import { DateTime } from 'luxon';
-import { HumanizeLocale } from './humanize-locale';
-import { default as defaultLocale } from './en';
+import { DateTime, Settings } from 'luxon';
 
-export { default as da } from './da';
-export { default as en } from './en';
+import { HumanizeLocale } from './humanize-locale';
+import { default as defaultHumanizeLocale } from './en';
+
 export { HumanizeLocale } from './humanize-locale';
 
-let cache: {[twoLetterCode: string]: HumanizeLocale} = {};
+let loadedLocales: {[localeId: string]: HumanizeLocale} = {};
 
 export function getLocale(date: DateTime) {
-    let twoLetterCode = date.locale.substr(0, 2);
-    
-    if (twoLetterCode in cache) {
-        return cache[twoLetterCode];
-    }
+    let localeId = makeLocaleId(date.locale);
+    return loadedLocales[localeId] || defaultHumanizeLocale;
+}
 
-    let locale: HumanizeLocale;
- 
-    try {
-        locale = require('./' + twoLetterCode).default;
-    }
-    catch (error) {
-        locale = defaultLocale;
-    }
+export function loadLocale(locale?: string) {
+    const localeId = makeLocaleId(locale || DateTime.local().locale);
 
-    cache[twoLetterCode] = locale;
+    return import('./' + localeId)
+        .catch(() => defaultHumanizeLocale)
+        .then(humanizeLocale => {
+            loadedLocales[localeId] = 'default' in humanizeLocale ? humanizeLocale.default : humanizeLocale;
+        });
+}
 
-    return locale;
+function makeLocaleId(locale: string) {
+    return locale.substr(0, 2);
 }

@@ -6,5 +6,9 @@ require('@babel/register')({
         /node_modules[\\\/]date-fns/
     ],
     extensions: ['.ts','.js'],
-    presets: ['@babel/preset-env']
+    presets: ['@babel/preset-env'],
+    plugins: [
+        '@babel/plugin-transform-runtime',
+        'babel-plugin-dynamic-import-node'
+    ]
 });
