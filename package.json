@@ -1,6 +1,6 @@
 {
   "name": "ur-humanize",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
