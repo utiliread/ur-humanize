@@ -4,7 +4,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc && rimraf dist/locale/*.d.ts",
+    "build": "tsc && rimraf dist/locale/*.d.ts && rimraf dist/locale/all.js",
     "test": "mocha -r ./ts-babel-register.js --icu-data-dir=./node_modules/full-icu src/**/*.spec.ts",
     "clean": "rimraf dist format locale"
   },

@@ -19,6 +19,7 @@
         "dist"
     ],
     "files": [
-        "src/index.ts"
+        "src/index.ts",
+        "src/locale/all.ts",
     ]
 }
