@@ -1,5 +1,5 @@
 import { DateTime, Settings } from 'luxon';
-import { relativeTime, relevantTime, timeAgo, timeDifference } from './humanize';
+import { relativeTime, relevantTime, timeAgo, timePeriod } from './humanize';
 
 import { expect } from 'chai';
 
@@ -86,7 +86,7 @@ describe('relativeTime', () => {
     });
 });
 
-describe('timeDifference', () => {
+describe('timePeriod', () => {
     let now = DateTime.local(2018, 1, 1, 8, 0, 0);
 
     before('set now', () => {
@@ -96,7 +96,7 @@ describe('timeDifference', () => {
     it('should return different times today', () => {
         const earliest = DateTime.local(2018, 1, 1, 3, 0, 0);
         const latest = DateTime.local(2018, 1, 1, 14, 0, 0);
-        const result = timeDifference(earliest, latest);
+        const result = timePeriod(earliest, latest);
         
         expect(result).to.be.equal('fra 03.00 til 14.00');
     });
@@ -104,7 +104,7 @@ describe('timeDifference', () => {
     it('should return different times on same day but not today', () => {
         const earliest = DateTime.local(2018, 1, 2, 3, 0, 0);
         const latest = DateTime.local(2018, 1, 2, 14, 0, 0);
-        const result = timeDifference(earliest, latest);
+        const result = timePeriod(earliest, latest);
         
         expect(result).to.be.equal('fra 2. jan. 2018 03.00 til 14.00');
     });
@@ -112,7 +112,7 @@ describe('timeDifference', () => {
     it('should return different times in same year', () => {
         const earliest = DateTime.local(2018, 1, 1, 3, 0, 0);
         const latest = DateTime.local(2018, 1, 2, 14, 0, 0);
-        const result = timeDifference(earliest, latest);
+        const result = timePeriod(earliest, latest);
         
         expect(result).to.be.equal('fra 1. jan. 2018 03.00 til 2. jan. 14.00');
     });
@@ -120,7 +120,7 @@ describe('timeDifference', () => {
     it('should return different dates in same year', () => {
         const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
         const latest = DateTime.local(2018, 1, 2, 0, 0, 0);
-        const result = timeDifference(earliest, latest);
+        const result = timePeriod(earliest, latest);
         
         expect(result).to.be.equal('fra 1. jan. 2018 til 2. jan.');
     });
@@ -128,7 +128,7 @@ describe('timeDifference', () => {
     it('should return different times in different years', () => {
         const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
         const latest = DateTime.local(2019, 1, 1, 1, 0, 0);
-        const result = timeDifference(earliest, latest);
+        const result = timePeriod(earliest, latest);
         
         expect(result).to.be.equal('fra 1. jan. 2018 00.00 til 1. jan. 2019 01.00');
     });
@@ -136,7 +136,7 @@ describe('timeDifference', () => {
     it('should return different dates in different years', () => {
         const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
         const latest = DateTime.local(2019, 1, 1, 0, 0, 0);
-        const result = timeDifference(earliest, latest);
+        const result = timePeriod(earliest, latest);
         
         expect(result).to.be.equal('fra 1. jan. 2018 til 1. jan. 2019');
     });

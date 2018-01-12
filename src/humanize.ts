@@ -41,7 +41,7 @@ export function relativeTime(instant: DateTime, base: DateTime) {
     return locale.fmtDistance(instant, base || DateTime.utc(), 'relative');
 }
 
-export function timeDifference(earliest: DateTime, latest: DateTime) {
+export function timePeriod(earliest: DateTime, latest: DateTime) {
     let earliestStartOfDay = earliest.toLocal().startOf('day');
     let latestStartOfDay = latest.toLocal().startOf('day');
 
