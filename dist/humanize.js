@@ -9,7 +9,7 @@ delete DATE_MED_WITHOUT_YEAR.year;
  * @param instant The instant
  * @param base The base time
  */
-export function timeAgo(instant, base) {
+export function casualTimeAgo(instant, base) {
     let locale = getLocale(instant.locale);
     return locale.fmtDistance(instant, base || DateTime.utc(), 'ago');
 }
@@ -18,24 +18,15 @@ export function timeAgo(instant, base) {
  * @param instant The instant
  * @param base The base time
  */
-export function relativeTime(instant, base) {
+export function casualRelativeTime(instant, base) {
     let locale = getLocale(instant.locale);
     return locale.fmtDistance(instant, base, 'relative');
 }
 /**
  * Format a text that looks like '1 minute'
- * @param instant1 One instant
- * @param instant2 Another instant
- */
-export function timeSpan(instant1, instant2) {
-    let locale = getLocale(instant1.locale);
-    return locale.fmtDistance(instant1, instant2);
-}
-/**
- * Format a text that looks like '1 minute'
  * @param duration The duration
  */
-export function durationSpan(duration) {
+export function casualDuration(duration) {
     let locale = getLocale(duration.locale);
     let base = DateTime.local();
     return locale.fmtDistance(base, base.plus(duration));
@@ -44,11 +35,11 @@ export function durationSpan(duration) {
  * Format a text that looses precision dependening on the time from now
  * @param instant The instant
  */
-export function relaxedTime(instant) {
+export function casualTime(instant) {
     let diff = instant.diffNow();
     if (Math.abs(diff.as('hours')) < 1) {
         // Within an hour
-        return timeAgo(instant);
+        return casualTimeAgo(instant);
     }
     else if (DateTime.local().hasSame(instant, 'day')) {
         // Within present day: time only
@@ -56,7 +47,7 @@ export function relaxedTime(instant) {
     }
     else if (Math.abs(diff.as('days')) < 7) {
         // Within +- 7 days
-        return timeAgo(instant);
+        return casualTimeAgo(instant);
     }
     else {
         // Else: date only
