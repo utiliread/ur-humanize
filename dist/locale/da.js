@@ -1,9 +1,9 @@
 import { da } from 'date-fns/esm/locale';
-import { formatDistance } from 'date-fns/esm';
+import { formatDistanceStrict } from 'date-fns/esm';
 const locale = {
     id: 'da',
     fmtDistance: (date, base, suffix) => {
-        let result = formatDistance(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: da });
+        let result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: da });
         switch (suffix) {
             case 'ago':
                 if (date < base) {
