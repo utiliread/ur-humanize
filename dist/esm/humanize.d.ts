@@ -1,4 +1,3 @@
-/// <reference types="luxon" />
 import { DateTime, Duration } from 'luxon';
 /**
  * Format a text that looks like '1 minute ago'

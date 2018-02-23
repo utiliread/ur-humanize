@@ -1,4 +1,3 @@
-/// <reference types="luxon" />
 import { DateTime } from 'luxon';
 export interface Locale {
     id: string;

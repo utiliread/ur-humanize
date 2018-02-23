@@ -1,33 +1,27 @@
 {
-  "name": "ur-humanize",
-  "version": "1.0.2",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc && rimraf dist/locale/*.d.ts && rimraf dist/locale/all.js",
-    "test": "mocha -r ./ts-babel-register.js --icu-data-dir=./node_modules/full-icu src/**/*.spec.ts",
-    "clean": "rimraf dist"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.0.0-beta.37",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.37",
-    "@babel/preset-env": "^7.0.0-beta.37",
-    "@babel/register": "^7.0.0-beta.37",
-    "@babel/runtime": "^7.0.0-beta.37",
-    "@types/chai": "^4.1.0",
-    "@types/luxon": "^0.2.2",
-    "@types/mocha": "^2.2.46",
-    "@types/node": "^9.3.0",
-    "babel-plugin-dynamic-import-node": "^1.2.0",
-    "chai": "^4.1.2",
-    "full-icu": "^1.2.0",
-    "mocha": "^4.1.0",
-    "rimraf": "^2.6.2",
-    "ts-node": "^4.1.0",
-    "typescript": "^2.6.2"
-  },
-  "dependencies": {
-    "date-fns": "^2.0.0-alpha.7",
-    "luxon": "^0.2.12"
-  }
+    "name": "ur-humanize",
+    "version": "1.0.2",
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "types": "dist/esm/index.d.ts",
+    "scripts": {
+        "build": "tsc && tsc -p tsconfig.cjs.json && rimraf dist/cjs/**/*.d.ts dist/**/*.spec.* dist/**/locale/*.d.ts",
+        "test": "karma start --single-run --browsers ChromeHeadless karma.config.js",
+        "watch": "karma start --auto-watch --browsers ChromeDebugging karma.config.js",
+        "clean": "rimraf dist"
+    },
+    "devDependencies": {
+        "@types/luxon": "^0.2.5",
+        "date-fns": "^2.0.0-alpha.7",
+        "karma-typescript-es6-transform": "^1.0.3",
+        "luxon": "^0.5.3",
+        "rimraf": "^2.6.2",
+        "typescript": "^2.7.2",
+        "ur-test": "^0.0.1"
+    },
+    "peerDependencies": {
+        "date-fns": "^2.0.0-alpha.7",
+        "luxon": "^0.5.3"
+    },
+    "dependencies": {}
 }

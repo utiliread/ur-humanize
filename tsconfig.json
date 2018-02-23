@@ -4,22 +4,13 @@
         "module": "esnext",
         "moduleResolution": "node",
         "declaration": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
+        "sourceMap": true,
         "strict": true,
         "rootDir": "src",
-        "outDir": "dist",
-        "lib": [
-            "es2017",
-            "dom"
+        "outDir": "dist/esm",
+        "lib": [ "esnext", "dom" ],
+        "types": [
+            "mocha"
         ]
-    },
-    "exclude": [
-        "node_modules",
-        "dist"
-    ],
-    "files": [
-        "src/index.ts",
-        "src/locale/all.ts"
-    ]
+    }
 }

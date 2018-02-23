@@ -33,3 +33,4 @@ function getSortedSourceTokens(from, to) {
     tokens.sort((lhs, rhs) => rhs.value.length - lhs.value.length);
     return tokens;
 }
+//# sourceMappingURL=reformat.js.map

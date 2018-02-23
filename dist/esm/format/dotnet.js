@@ -22,3 +22,4 @@ export const dotnet = {
     "timezone-1": "z",
     "timezone-4": "zzz"
 };
+//# sourceMappingURL=dotnet.js.map

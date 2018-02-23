@@ -1,30 +1,31 @@
-import { da } from 'date-fns/esm/locale';
+import { enUS } from 'date-fns/esm/locale';
 import { formatDistanceStrict } from 'date-fns/esm';
 const locale = {
-    id: 'da',
+    id: 'en',
     fmtDistance: (date, base, suffix) => {
-        let result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: da });
+        let result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: enUS });
         switch (suffix) {
             case 'ago':
                 if (date < base) {
-                    return `${result} siden`;
+                    return `${result} ago`;
                 }
                 else {
-                    return `om ${result}`;
+                    return `in ${result}`;
                 }
             case 'relative':
                 if (date < base) {
-                    return `${result} før`;
+                    return `${result} before`;
                 }
                 else {
-                    return `${result} efter`;
+                    return `${result} after`;
                 }
             default:
                 return result;
         }
     },
     fmtDifference: (earliest, earliestFormat, latest, latestFormat) => {
-        return `fra ${earliest.toLocaleString(earliestFormat)} til ${latest.toLocaleString(latestFormat)}`;
+        return `from ${earliest.toLocaleString(earliestFormat)} to ${latest.toLocaleString(latestFormat)}`;
     }
 };
 export default locale;
+//# sourceMappingURL=en.js.map
