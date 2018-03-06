@@ -1,4 +1,4 @@
-export const dotnet = {
+export var dotnet = {
     "day-of-month-1": "d",
     "day-of-month-2": "dd",
     "day-of-week-abbr": "ddd",

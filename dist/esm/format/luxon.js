@@ -1,4 +1,4 @@
-export const luxon = {
+export var luxon = {
     "day-of-month-1": "d",
     "day-of-month-2": "dd",
     "day-of-week-abbr": "ccc",

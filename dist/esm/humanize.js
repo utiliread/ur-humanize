@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import { getLocale } from './locale-cache';
-let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED));
+var DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED));
 delete DATETIME_MED_WITHOUT_YEAR.year;
-let DATE_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
+var DATE_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
 delete DATE_MED_WITHOUT_YEAR.year;
 /**
  * Format a text that looks like '1 minute ago'
@@ -10,7 +10,7 @@ delete DATE_MED_WITHOUT_YEAR.year;
  * @param base The base time
  */
 export function casualTimeAgo(instant, base) {
-    let locale = getLocale(instant.locale);
+    var locale = getLocale(instant.locale);
     return locale.fmtDistance(instant, base || DateTime.utc(), 'ago');
 }
 /**
@@ -19,7 +19,7 @@ export function casualTimeAgo(instant, base) {
  * @param base The base time
  */
 export function casualRelativeTime(instant, base) {
-    let locale = getLocale(instant.locale);
+    var locale = getLocale(instant.locale);
     return locale.fmtDistance(instant, base, 'relative');
 }
 /**
@@ -27,8 +27,8 @@ export function casualRelativeTime(instant, base) {
  * @param duration The duration
  */
 export function casualDuration(duration) {
-    let locale = getLocale(duration.locale);
-    let base = DateTime.local();
+    var locale = getLocale(duration.locale);
+    var base = DateTime.local();
     return locale.fmtDistance(base, base.plus(duration));
 }
 /**
@@ -36,7 +36,7 @@ export function casualDuration(duration) {
  * @param instant The instant
  */
 export function casualTime(instant) {
-    let diff = instant.diffNow();
+    var diff = instant.diffNow();
     if (Math.abs(diff.as('hours')) < 1) {
         // Within an hour
         return casualTimeAgo(instant);
@@ -59,10 +59,10 @@ export function casualTime(instant) {
  * @param instant The instant
  */
 export function exactTime(instant) {
-    let startOfDay = instant.toLocal().startOf('day');
-    let hasHourComponent = +instant !== +startOfDay;
-    let now = DateTime.utc();
-    let format;
+    var startOfDay = instant.toLocal().startOf('day');
+    var hasHourComponent = +instant !== +startOfDay;
+    var now = DateTime.utc();
+    var format;
     if (instant.hasSame(now, 'day')) {
         // Time today
         format = DateTime.TIME_SIMPLE;
@@ -97,12 +97,12 @@ export function exactTime(instant) {
  * @param latest The latest instant
  */
 export function exactPeriod(earliest, latest) {
-    let earliestStartOfDay = earliest.toLocal().startOf('day');
-    let latestStartOfDay = latest.toLocal().startOf('day');
-    let hasHourComponent = +earliest !== +earliestStartOfDay || +latest !== +latestStartOfDay;
-    let now = DateTime.utc();
-    let earliestFormat;
-    let latestFormat;
+    var earliestStartOfDay = earliest.toLocal().startOf('day');
+    var latestStartOfDay = latest.toLocal().startOf('day');
+    var hasHourComponent = +earliest !== +earliestStartOfDay || +latest !== +latestStartOfDay;
+    var now = DateTime.utc();
+    var earliestFormat;
+    var latestFormat;
     if (earliest.hasSame(latest, 'day')) {
         if (earliest.hasSame(now, 'day')) {
             // Different times today
@@ -155,7 +155,7 @@ export function exactPeriod(earliest, latest) {
             latestFormat = DateTime.DATE_MED;
         }
     }
-    let locale = getLocale(earliest.locale);
+    var locale = getLocale(earliest.locale);
     return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
 }
 //# sourceMappingURL=humanize.js.map
