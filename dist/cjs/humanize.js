@@ -64,14 +64,14 @@ exports.casualTime = casualTime;
  * Format the shortest exact text describing an instant
  * @param instant The instant
  */
-function exactTime(instant) {
+function exactTime(instant, includeSeconds) {
     var startOfDay = instant.toLocal().startOf('day');
     var hasHourComponent = +instant !== +startOfDay;
     var now = luxon_1.DateTime.utc();
     var format;
     if (instant.hasSame(now, 'day')) {
         // Time today
-        format = luxon_1.DateTime.TIME_SIMPLE;
+        format = includeSeconds ? luxon_1.DateTime.TIME_WITH_SECONDS : luxon_1.DateTime.TIME_SIMPLE;
     }
     else if (instant.hasSame(now, 'year')) {
         // Present year

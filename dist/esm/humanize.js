@@ -58,14 +58,14 @@ export function casualTime(instant) {
  * Format the shortest exact text describing an instant
  * @param instant The instant
  */
-export function exactTime(instant) {
+export function exactTime(instant, includeSeconds) {
     var startOfDay = instant.toLocal().startOf('day');
     var hasHourComponent = +instant !== +startOfDay;
     var now = DateTime.utc();
     var format;
     if (instant.hasSame(now, 'day')) {
         // Time today
-        format = DateTime.TIME_SIMPLE;
+        format = includeSeconds ? DateTime.TIME_WITH_SECONDS : DateTime.TIME_SIMPLE;
     }
     else if (instant.hasSame(now, 'year')) {
         // Present year

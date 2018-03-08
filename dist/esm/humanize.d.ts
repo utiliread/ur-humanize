@@ -25,7 +25,7 @@ export declare function casualTime(instant: DateTime): string;
  * Format the shortest exact text describing an instant
  * @param instant The instant
  */
-export declare function exactTime(instant: DateTime): string;
+export declare function exactTime(instant: DateTime, includeSeconds?: boolean): string;
 /**
  * Format the shortest exact text describing a period
  * @param earliest The earliest instant

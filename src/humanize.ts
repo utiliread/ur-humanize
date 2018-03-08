@@ -70,7 +70,7 @@ export function casualTime(instant: DateTime) {
  * Format the shortest exact text describing an instant
  * @param instant The instant
  */
-export function exactTime(instant: DateTime) {
+export function exactTime(instant: DateTime, includeSeconds?: boolean) {
     let startOfDay = instant.toLocal().startOf('day');
 
     let hasHourComponent = +instant !== +startOfDay;
@@ -80,7 +80,7 @@ export function exactTime(instant: DateTime) {
 
     if (instant.hasSame(now, 'day')) {
         // Time today
-        format = DateTime.TIME_SIMPLE;
+        format = includeSeconds ? DateTime.TIME_WITH_SECONDS : DateTime.TIME_SIMPLE;
     }
     else if (instant.hasSame(now, 'year')) {
         // Present year
