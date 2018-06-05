@@ -13,7 +13,7 @@ delete DATE_MED_WITHOUT_YEAR.year;
  */
 function casualTimeAgo(instant, base) {
     var locale = locale_cache_1.getLocale(instant.locale);
-    return locale.fmtDistance(instant, base || luxon_1.DateTime.utc(), 'ago');
+    return locale.fmtDistance(instant.toLocal(), base || luxon_1.DateTime.local(), 'ago');
 }
 exports.casualTimeAgo = casualTimeAgo;
 /**
@@ -23,7 +23,7 @@ exports.casualTimeAgo = casualTimeAgo;
  */
 function casualRelativeTime(instant, base) {
     var locale = locale_cache_1.getLocale(instant.locale);
-    return locale.fmtDistance(instant, base, 'relative');
+    return locale.fmtDistance(instant.toLocal(), base.toLocal(), 'relative');
 }
 exports.casualRelativeTime = casualRelativeTime;
 /**
@@ -41,6 +41,7 @@ exports.casualDuration = casualDuration;
  * @param instant The instant
  */
 function casualTime(instant) {
+    instant = instant.toLocal();
     var diff = instant.diffNow();
     if (Math.abs(diff.as('hours')) < 1) {
         // Within an hour
@@ -65,9 +66,9 @@ exports.casualTime = casualTime;
  * @param instant The instant
  */
 function exactTime(instant, includeSeconds) {
-    var startOfDay = instant.toLocal().startOf('day');
-    var hasHourComponent = +instant !== +startOfDay;
-    var now = luxon_1.DateTime.utc();
+    instant = instant.toLocal();
+    var now = luxon_1.DateTime.local();
+    var hasHourComponent = +instant !== +instant.startOf('day');
     var format;
     if (instant.hasSame(now, 'day')) {
         // Time today
@@ -104,10 +105,10 @@ exports.exactTime = exactTime;
  * @param latest The latest instant
  */
 function exactPeriod(earliest, latest) {
-    var earliestStartOfDay = earliest.toLocal().startOf('day');
-    var latestStartOfDay = latest.toLocal().startOf('day');
-    var hasHourComponent = +earliest !== +earliestStartOfDay || +latest !== +latestStartOfDay;
+    earliest = earliest.toLocal();
+    latest = latest.toLocal();
     var now = luxon_1.DateTime.utc();
+    var hasHourComponent = +earliest !== +earliest.startOf('day') || +latest !== +latest.startOf('day');
     var earliestFormat;
     var latestFormat;
     if (earliest.hasSame(latest, 'day')) {

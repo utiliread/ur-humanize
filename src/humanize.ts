@@ -14,9 +14,9 @@ delete DATE_MED_WITHOUT_YEAR.year;
  * @param base The base time
  */
 export function casualTimeAgo(instant: DateTime, base?: DateTime) {
-    let locale = getLocale(instant.locale);
+    const locale = getLocale(instant.locale);
 
-    return locale.fmtDistance(instant, base || DateTime.utc(), 'ago');
+    return locale.fmtDistance(instant.toLocal(), base || DateTime.local(), 'ago');
 }
 
 /**
@@ -25,9 +25,9 @@ export function casualTimeAgo(instant: DateTime, base?: DateTime) {
  * @param base The base time
  */
 export function casualRelativeTime(instant: DateTime, base: DateTime) {
-    let locale = getLocale(instant.locale);
+    const locale = getLocale(instant.locale);
 
-    return locale.fmtDistance(instant, base, 'relative');
+    return locale.fmtDistance(instant.toLocal(), base.toLocal(), 'relative');
 }
 
 /**
@@ -35,8 +35,8 @@ export function casualRelativeTime(instant: DateTime, base: DateTime) {
  * @param duration The duration
  */
 export function casualDuration(duration: Duration) {
-    let locale = getLocale(duration.locale);
-    let base = DateTime.local();
+    const locale = getLocale(duration.locale);
+    const base = DateTime.local();
 
     return locale.fmtDistance(base, base.plus(duration));
 }
@@ -46,7 +46,9 @@ export function casualDuration(duration: Duration) {
  * @param instant The instant
  */
 export function casualTime(instant: DateTime) {
-    let diff = instant.diffNow();
+    instant = instant.toLocal();
+    
+    const diff = instant.diffNow();
 
     if (Math.abs(diff.as('hours')) < 1) {
         // Within an hour
@@ -71,11 +73,11 @@ export function casualTime(instant: DateTime) {
  * @param instant The instant
  */
 export function exactTime(instant: DateTime, includeSeconds?: boolean) {
-    let startOfDay = instant.toLocal().startOf('day');
+    instant = instant.toLocal();
 
-    let hasHourComponent = +instant !== +startOfDay;
-
-    let now = DateTime.utc();
+    const now = DateTime.local();
+    const hasHourComponent = +instant !== +instant.startOf('day');
+    
     let format: Intl.DateTimeFormatOptions;
 
     if (instant.hasSame(now, 'day')) {
@@ -114,12 +116,12 @@ export function exactTime(instant: DateTime, includeSeconds?: boolean) {
  * @param latest The latest instant
  */
 export function exactPeriod(earliest: DateTime, latest: DateTime) {
-    let earliestStartOfDay = earliest.toLocal().startOf('day');
-    let latestStartOfDay = latest.toLocal().startOf('day');
+    earliest = earliest.toLocal();
+    latest = latest.toLocal();
 
-    let hasHourComponent = +earliest !== +earliestStartOfDay || +latest !== +latestStartOfDay;
+    const now = DateTime.utc();
+    const hasHourComponent = +earliest !== +earliest.startOf('day') || +latest !== +latest.startOf('day');
 
-    let now = DateTime.utc();
     let earliestFormat: Intl.DateTimeFormatOptions;
     let latestFormat: Intl.DateTimeFormatOptions;
 
@@ -176,7 +178,7 @@ export function exactPeriod(earliest: DateTime, latest: DateTime) {
         }
     }
 
-    let locale = getLocale(earliest.locale);
+    const locale = getLocale(earliest.locale);
 
     return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
 }

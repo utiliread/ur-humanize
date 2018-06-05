@@ -11,7 +11,7 @@ delete DATE_MED_WITHOUT_YEAR.year;
  */
 export function casualTimeAgo(instant, base) {
     var locale = getLocale(instant.locale);
-    return locale.fmtDistance(instant, base || DateTime.utc(), 'ago');
+    return locale.fmtDistance(instant.toLocal(), base || DateTime.local(), 'ago');
 }
 /**
  * Format a text that looks like '1 minute before'
@@ -20,7 +20,7 @@ export function casualTimeAgo(instant, base) {
  */
 export function casualRelativeTime(instant, base) {
     var locale = getLocale(instant.locale);
-    return locale.fmtDistance(instant, base, 'relative');
+    return locale.fmtDistance(instant.toLocal(), base.toLocal(), 'relative');
 }
 /**
  * Format a text that looks like '1 minute'
@@ -36,6 +36,7 @@ export function casualDuration(duration) {
  * @param instant The instant
  */
 export function casualTime(instant) {
+    instant = instant.toLocal();
     var diff = instant.diffNow();
     if (Math.abs(diff.as('hours')) < 1) {
         // Within an hour
@@ -59,9 +60,9 @@ export function casualTime(instant) {
  * @param instant The instant
  */
 export function exactTime(instant, includeSeconds) {
-    var startOfDay = instant.toLocal().startOf('day');
-    var hasHourComponent = +instant !== +startOfDay;
-    var now = DateTime.utc();
+    instant = instant.toLocal();
+    var now = DateTime.local();
+    var hasHourComponent = +instant !== +instant.startOf('day');
     var format;
     if (instant.hasSame(now, 'day')) {
         // Time today
@@ -97,10 +98,10 @@ export function exactTime(instant, includeSeconds) {
  * @param latest The latest instant
  */
 export function exactPeriod(earliest, latest) {
-    var earliestStartOfDay = earliest.toLocal().startOf('day');
-    var latestStartOfDay = latest.toLocal().startOf('day');
-    var hasHourComponent = +earliest !== +earliestStartOfDay || +latest !== +latestStartOfDay;
+    earliest = earliest.toLocal();
+    latest = latest.toLocal();
     var now = DateTime.utc();
+    var hasHourComponent = +earliest !== +earliest.startOf('day') || +latest !== +latest.startOf('day');
     var earliestFormat;
     var latestFormat;
     if (earliest.hasSame(latest, 'day')) {
