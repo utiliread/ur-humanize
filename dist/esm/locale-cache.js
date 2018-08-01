@@ -8,8 +8,8 @@ export function getLocale(locale) {
 export function loadLocale(locale) {
     var localeId = makeLocaleId(locale || DateTime.local().locale);
     return import(/* webpackChunkName: "lang-[request]" */ "./locale/" + localeId)
-        .catch(function () {
-        console.log("Unable to find locale " + localeId + " - using default locale.");
+        .catch(function (error) {
+        console.log("Unable to find locale '" + localeId + "' - using default", error);
         return defaultHumanizeLocale;
     })
         .then(function (loaded) {

@@ -13,8 +13,8 @@ export function loadLocale(locale?: string) {
     const localeId = makeLocaleId(locale || DateTime.local().locale);
 
     return import(/* webpackChunkName: "lang-[request]" */ `./locale/${localeId}`)
-        .catch(() => {
-            console.log(`Unable to find locale ${localeId} - using default locale.`);
+        .catch(error => {
+            console.log(`Unable to find locale '${localeId}' - using default`, error);
 
             return defaultHumanizeLocale;
         })
