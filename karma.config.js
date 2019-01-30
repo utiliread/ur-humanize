@@ -1,27 +1,27 @@
-const tsconfig = require('./tsconfig.json');
+const tsconfig = require("./tsconfig.json");
 
 module.exports = function (config) {
     config.set({
-        frameworks: ['mocha', 'chai', 'karma-typescript'],
+        frameworks: ["mocha", "chai", "karma-typescript"],
         files: [
-            'src/**/*.ts'
+            "src/**/*.ts"
         ],
         preprocessors: {
-            'src/**/*.ts': ['karma-typescript']
+            "src/**/*.ts": ["karma-typescript"]
         },
-        reporters: ['progress', 'karma-typescript'],
-        browsers: ['ChromeHeadless', 'ChromeDebugging'],
+        reporters: ["progress", "karma-typescript"],
+        browsers: ["ChromeHeadless", "ChromeDebugging"],
         customLaunchers: {
             ChromeDebugging: {
-                base: 'Chrome',
-                flags: ['--remote-debugging-port=9222']
+                base: "Chrome",
+                flags: ["--remote-debugging-port=9222"]
             }
         },
         karmaTypescriptConfig: {
             bundlerOptions: {
                 transforms: [
-                    require('karma-typescript-es6-transform')({
-                        presets: ['env']
+                    require("karma-typescript-es6-transform")({
+                        presets: ["env"]
                     })
                 ],
                 entrypoints: /\.spec\.ts$/,
@@ -30,7 +30,7 @@ module.exports = function (config) {
             coverageOptions: {
                 instrumentation: false
             },
-            tsconfig: './tsconfig.cjs.json'
+            tsconfig: "./tsconfig.cjs.json"
         }
     })
 }

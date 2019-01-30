@@ -5,7 +5,7 @@ import { default as defaultHumanizeLocale } from './locale/en';
 const cache: {[localeId: string]: Locale} = {};
 
 export function getLocale(locale: string) {
-    let localeId = makeLocaleId(locale);
+    const localeId = makeLocaleId(locale);
     return cache[localeId] || defaultHumanizeLocale;
 }
 
@@ -19,14 +19,14 @@ export function loadLocale(locale?: string | Locale) {
 
         return import(/* webpackChunkName: "lang-[request]" */ `./locale/${localeId}`)
             .catch(error => {
-                console.log(`Unable to find locale ${localeId} - using default locale`, error);
+                console.error(`Unable to find locale ${localeId} - using default locale`, error);
 
                 return defaultHumanizeLocale;
             })
             .then(loaded => {
-                let loadedLocale: Locale = 'default' in loaded ? loaded.default : loaded;
+                const loadedLocale: Locale = 'default' in loaded ? loaded.default : loaded;
                 
-                // Inject the loaded lcoale into the cache
+                // Inject the loaded locale into the cache
                 cache[localeId] = loadedLocale;
 
                 return loadedLocale;
