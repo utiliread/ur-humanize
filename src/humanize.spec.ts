@@ -3,12 +3,27 @@ import { casualDuration, casualRelativeTime, casualTime, casualTimeAgo, exactPer
 
 import { expect } from 'chai';
 import { loadLocale } from './locale-cache';
+import { da } from "./locales";
 
-before('set default locale', async () => {
-    Settings.defaultLocale = 'da';
+import * as datefnsLocale from "date-fns/locale/sv/index";
+import { formatDistanceStrict } from 'date-fns/esm';
 
-    await loadLocale();
+Settings.defaultLocale = 'da';
+
+before('loadLocale', async () => {
+    await loadLocale(da);
 });
+
+describe('date-fns', () => {
+    it('should tranlate', () => {
+        const now = DateTime.local();
+        const aMinuteAgo = now.minus({ minutes: 1 });
+        console.log(datefnsLocale);
+        console.log(formatDistanceStrict(aMinuteAgo.toJSDate(), now.toJSDate(), {
+            locale: <any>datefnsLocale
+        }));
+    });
+})
 
 describe('casualTimeAgo', () => {
     it('should return 1 minut siden', () => {
@@ -70,7 +85,7 @@ describe('casualDuration', () => {
 });
 
 describe('casualTime', () => {
-    let now = DateTime.local(2018, 1, 1, 8, 0, 0);
+    const now = DateTime.local(2018, 1, 1, 8, 0, 0);
 
     before('set now', () => {
         Settings.now = () => now.valueOf();
@@ -106,7 +121,7 @@ describe('casualTime', () => {
 });
 
 describe('exactTime', () => {
-    let now = DateTime.local(2018, 1, 1, 8, 0, 0);
+    const now = DateTime.local(2018, 1, 1, 8, 0, 0);
 
     before('set now', () => {
         Settings.now = () => now.valueOf();
@@ -149,7 +164,7 @@ describe('exactTime', () => {
 });
 
 describe('exactPeriod', () => {
-    let now = DateTime.local(2018, 1, 1, 8, 0, 0);
+    const now = DateTime.local(2018, 1, 1, 8, 0, 0);
 
     before('set now', () => {
         Settings.now = () => now.valueOf();

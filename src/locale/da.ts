@@ -1,29 +1,18 @@
 import { DateTime } from 'luxon';
 import { Locale } from '../locale';
-import { da } from 'date-fns/esm/locale';
-import { formatDistanceStrict } from 'date-fns/esm';
+import * as datefnsLocale from "date-fns/locale/da/index";
+import { formatDistanceStrict } from 'date-fns';
 
 const locale: Locale = {
     id: 'da',
     fmtDistance: (date: DateTime, base: DateTime, suffix?: 'ago' | 'relative') => {
-        let result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: da });
+        const result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: datefnsLocale });
 
         switch (suffix) {
             case 'ago':
-                if (date < base) {
-                    return `${result} siden`;
-                }
-                else {
-                    return `om ${result}`;
-                }
+                return date < base ? `${result} siden` : `om ${result}`;
             case 'relative':
-                if (date < base)
-                {
-                    return `${result} før`;
-                }
-                else {
-                    return `${result} efter`;
-                }
+                return date < base ? `${result} før` : `${result} efter`;
             default:
                 return result;
         }
