@@ -10,8 +10,8 @@ function getLocale(locale) {
 exports.getLocale = getLocale;
 function loadLocale(locale) {
     var localeId = makeLocaleId(locale || luxon_1.DateTime.local().locale);
-    return Promise.resolve().then(function () { return require(/* webpackChunkName: "lang-[request]" */ "./locale/" + localeId); }).catch(function () {
-        console.log("Unable to find locale " + localeId + " - using default locale.");
+    return Promise.resolve().then(function () { return require(/* webpackChunkName: "lang-[request]" */ "./locale/" + localeId); }).catch(function (error) {
+        console.log("Unable to find locale '" + localeId + "' - using default", error);
         return en_1.default;
     })
         .then(function (loaded) {

@@ -3,7 +3,7 @@ import { casualDuration, casualRelativeTime, casualTime, casualTimeAgo, exactPer
 
 import { expect } from 'chai';
 import { loadLocale } from './locale-cache';
-import { da } from "./locales";
+import { default as da } from "./locale/da";
 
 import * as datefnsLocale from "date-fns/locale/sv/index";
 import { formatDistanceStrict } from 'date-fns/esm';

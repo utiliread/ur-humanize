@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { Locale } from './locale';
-import { default as defaultHumanizeLocale } from './locales/en';
+import { default as defaultHumanizeLocale } from './locale/en';
 
 const cache: {[localeId: string]: Locale} = {};
 
@@ -18,8 +18,8 @@ export function loadLocale(locale?: string | Locale) {
         const localeId = makeLocaleId(locale || DateTime.local().locale);
 
         return import(/* webpackChunkName: "lang-[request]" */ `./locales/${localeId}`)
-            .catch(() => {
-                console.log(`Unable to find locale ${localeId} - using default locale.`);
+            .catch(error => {
+                console.log(`Unable to find locale ${localeId} - using default locale`, error);
 
                 return defaultHumanizeLocale;
             })
