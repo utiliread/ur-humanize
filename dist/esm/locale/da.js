@@ -1,24 +1,14 @@
-import { da } from 'date-fns/esm/locale';
-import { formatDistanceStrict } from 'date-fns/esm';
+import * as datefnsLocale from "date-fns/locale/da/index";
+import { formatDistanceStrict } from 'date-fns';
 var locale = {
     id: 'da',
     fmtDistance: function (date, base, suffix) {
-        var result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: da });
+        var result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: datefnsLocale });
         switch (suffix) {
             case 'ago':
-                if (date < base) {
-                    return result + " siden";
-                }
-                else {
-                    return "om " + result;
-                }
+                return date < base ? result + " siden" : "om " + result;
             case 'relative':
-                if (date < base) {
-                    return result + " f\u00F8r";
-                }
-                else {
-                    return result + " efter";
-                }
+                return date < base ? result + " f\u00F8r" : result + " efter";
             default:
                 return result;
         }
