@@ -14,7 +14,7 @@ function loadLocale(locale) {
     }
     if (typeof locale === "string") {
         var localeId_1 = makeLocaleId(locale || luxon_1.DateTime.local().locale);
-        return Promise.resolve().then(function () { return require(/* webpackChunkName: "lang-[request]" */ "./locales/" + localeId_1); }).catch(function (error) {
+        return Promise.resolve().then(function () { return require(/* webpackChunkName: "lang-[request]" */ "./locale/" + localeId_1); }).catch(function (error) {
             console.log("Unable to find locale " + localeId_1 + " - using default locale", error);
             return en_1.default;
         })

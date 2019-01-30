@@ -11,7 +11,7 @@ export function loadLocale(locale) {
     }
     if (typeof locale === "string") {
         var localeId_1 = makeLocaleId(locale || DateTime.local().locale);
-        return import(/* webpackChunkName: "lang-[request]" */ "./locales/" + localeId_1)
+        return import(/* webpackChunkName: "lang-[request]" */ "./locale/" + localeId_1)
             .catch(function (error) {
             console.log("Unable to find locale " + localeId_1 + " - using default locale", error);
             return defaultHumanizeLocale;
