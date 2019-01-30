@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { Locale } from './locale';
-import { default as defaultHumanizeLocale } from './locale/en';
+import { default as defaultHumanizeLocale } from './locales/en';
 
 const cache: {[localeId: string]: Locale} = {};
 
@@ -9,23 +9,33 @@ export function getLocale(locale: string) {
     return cache[localeId] || defaultHumanizeLocale;
 }
 
-export function loadLocale(locale?: string) {
-    const localeId = makeLocaleId(locale || DateTime.local().locale);
+export function loadLocale(locale?: string | Locale) {
+    if (!locale) {
+        locale = DateTime.local().locale;
+    }
 
-    return import(/* webpackChunkName: "lang-[request]" */ `./locale/${localeId}`)
-        .catch(() => {
-            console.log(`Unable to find locale ${localeId} - using default locale.`);
+    if (typeof locale === "string") {
+        const localeId = makeLocaleId(locale || DateTime.local().locale);
 
-            return defaultHumanizeLocale;
-        })
-        .then(loaded => {
-            let loadedLocale: Locale = 'default' in loaded ? loaded.default : loaded;
-            
-            // Inject the loaded lcoale into the cache
-            cache[localeId] = loadedLocale;
+        return import(/* webpackChunkName: "lang-[request]" */ `./locales/${localeId}`)
+            .catch(() => {
+                console.log(`Unable to find locale ${localeId} - using default locale.`);
 
-            return loadedLocale;
-        });
+                return defaultHumanizeLocale;
+            })
+            .then(loaded => {
+                let loadedLocale: Locale = 'default' in loaded ? loaded.default : loaded;
+                
+                // Inject the loaded lcoale into the cache
+                cache[localeId] = loadedLocale;
+
+                return loadedLocale;
+            });
+    }
+    else {
+        cache[locale.id] = locale;
+        return Promise.resolve(locale);
+    }
 }
 
 function makeLocaleId(locale: string) {
