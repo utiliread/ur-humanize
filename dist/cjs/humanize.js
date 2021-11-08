@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.exactPeriod = exports.exactTime = exports.casualTime = exports.casualDuration = exports.casualRelativeTime = exports.casualTimeAgo = void 0;
 var luxon_1 = require("luxon");
 var locale_cache_1 = require("./locale-cache");
 var DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(luxon_1.DateTime.DATETIME_MED));
@@ -12,7 +13,7 @@ delete DATE_MED_WITHOUT_YEAR.year;
  * @param base The base time
  */
 function casualTimeAgo(instant, base) {
-    var locale = locale_cache_1.getLocale(instant.locale);
+    var locale = (0, locale_cache_1.getLocale)(instant.locale);
     return locale.fmtDistance(instant.toLocal(), base || luxon_1.DateTime.local(), 'ago');
 }
 exports.casualTimeAgo = casualTimeAgo;
@@ -22,7 +23,7 @@ exports.casualTimeAgo = casualTimeAgo;
  * @param base The base time
  */
 function casualRelativeTime(instant, base) {
-    var locale = locale_cache_1.getLocale(instant.locale);
+    var locale = (0, locale_cache_1.getLocale)(instant.locale);
     return locale.fmtDistance(instant.toLocal(), base.toLocal(), 'relative');
 }
 exports.casualRelativeTime = casualRelativeTime;
@@ -31,7 +32,7 @@ exports.casualRelativeTime = casualRelativeTime;
  * @param duration The duration
  */
 function casualDuration(duration) {
-    var locale = locale_cache_1.getLocale(duration.locale);
+    var locale = (0, locale_cache_1.getLocale)(duration.locale);
     var base = luxon_1.DateTime.local();
     return locale.fmtDistance(base, base.plus(duration));
 }
@@ -163,7 +164,7 @@ function exactPeriod(earliest, latest) {
             latestFormat = luxon_1.DateTime.DATE_MED;
         }
     }
-    var locale = locale_cache_1.getLocale(earliest.locale);
+    var locale = (0, locale_cache_1.getLocale)(earliest.locale);
     return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
 }
 exports.exactPeriod = exactPeriod;

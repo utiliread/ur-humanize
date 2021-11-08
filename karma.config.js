@@ -20,9 +20,7 @@ module.exports = function (config) {
         karmaTypescriptConfig: {
             bundlerOptions: {
                 transforms: [
-                    require("karma-typescript-es6-transform")({
-                        presets: ["env"]
-                    })
+                    require("karma-typescript-es6-transform")()
                 ],
                 entrypoints: /\.spec\.ts$/,
                 sourceMap: tsconfig.compilerOptions.sourceMap

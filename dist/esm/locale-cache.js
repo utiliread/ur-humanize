@@ -13,12 +13,12 @@ export function loadLocale(locale) {
         var localeId_1 = makeLocaleId(locale || DateTime.local().locale);
         return import(/* webpackChunkName: "lang-[request]" */ "./locale/" + localeId_1)
             .catch(function (error) {
-            console.log("Unable to find locale " + localeId_1 + " - using default locale", error);
+            console.error("Unable to find locale " + localeId_1 + " - using default locale", error);
             return defaultHumanizeLocale;
         })
             .then(function (loaded) {
             var loadedLocale = 'default' in loaded ? loaded.default : loaded;
-            // Inject the loaded lcoale into the cache
+            // Inject the loaded locale into the cache
             cache[localeId_1] = loadedLocale;
             return loadedLocale;
         });

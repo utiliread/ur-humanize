@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon';
 import { Locale } from '../locale';
-import * as datefnsLocale from "date-fns/locale/en-US/index";
+import datefnsLocale from "date-fns/locale/en-US/index";
 import { formatDistanceStrict } from 'date-fns';
 
 const locale: Locale = {
     id: 'en',
     fmtDistance: (date: DateTime, base: DateTime, suffix?: 'ago' | 'relative') => {
-        const result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { includeSeconds: true, locale: datefnsLocale });
+        const result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { locale: datefnsLocale });
 
         switch (suffix) {
             case 'ago':
