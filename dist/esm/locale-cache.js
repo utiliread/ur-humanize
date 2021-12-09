@@ -11,9 +11,9 @@ export function loadLocale(locale) {
     }
     if (typeof locale === "string") {
         var localeId_1 = makeLocaleId(locale || DateTime.local().locale);
-        return import(/* webpackChunkName: "lang-[request]" */ "./locale/" + localeId_1)
+        return import(/* webpackChunkName: "lang-[request]" */ "./locale/".concat(localeId_1))
             .catch(function (error) {
-            console.error("Unable to find locale " + localeId_1 + " - using default locale", error);
+            console.error("Unable to find locale ".concat(localeId_1, " - using default locale"), error);
             return defaultHumanizeLocale;
         })
             .then(function (loaded) {
@@ -23,12 +23,15 @@ export function loadLocale(locale) {
             return loadedLocale;
         });
     }
-    else {
+    else if (locale) {
         cache[locale.id] = locale;
         return Promise.resolve(locale);
     }
+    else {
+        throw new Error("Unable to load locale");
+    }
 }
 function makeLocaleId(locale) {
-    return locale.substr(0, 2);
+    return locale.substring(0, 2);
 }
 //# sourceMappingURL=locale-cache.js.map

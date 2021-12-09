@@ -32,12 +32,15 @@ export function loadLocale(locale?: string | Locale) {
                 return loadedLocale;
             });
     }
-    else {
+    else if (locale) {
         cache[locale.id] = locale;
         return Promise.resolve(locale);
+    }
+    else {
+        throw new Error("Unable to load locale");
     }
 }
 
 function makeLocaleId(locale: string) {
-    return locale.substr(0, 2);
+    return locale.substring(0, 2);
 }

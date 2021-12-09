@@ -6,15 +6,15 @@ var locale = {
         var result = formatDistanceStrict(date.toJSDate(), base.toJSDate(), { locale: datefnsLocale });
         switch (suffix) {
             case 'ago':
-                return date < base ? result + " ago" : "in " + result;
+                return date < base ? "".concat(result, " ago") : "in ".concat(result);
             case 'relative':
-                return date < base ? result + " before" : result + " after";
+                return date < base ? "".concat(result, " before") : "".concat(result, " after");
             default:
                 return result;
         }
     },
     fmtDifference: function (earliest, earliestFormat, latest, latestFormat) {
-        return "from " + earliest.toLocaleString(earliestFormat) + " to " + latest.toLocaleString(latestFormat);
+        return "from ".concat(earliest.toLocaleString(earliestFormat), " to ").concat(latest.toLocaleString(latestFormat));
     }
 };
 export default locale;

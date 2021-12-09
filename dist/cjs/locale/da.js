@@ -8,15 +8,15 @@ var locale = {
         var result = (0, date_fns_1.formatDistanceStrict)(date.toJSDate(), base.toJSDate(), { locale: index_1.default });
         switch (suffix) {
             case 'ago':
-                return date < base ? result + " siden" : "om " + result;
+                return date < base ? "".concat(result, " siden") : "om ".concat(result);
             case 'relative':
-                return date < base ? result + " f\u00F8r" : result + " efter";
+                return date < base ? "".concat(result, " f\u00F8r") : "".concat(result, " efter");
             default:
                 return result;
         }
     },
     fmtDifference: function (earliest, earliestFormat, latest, latestFormat) {
-        return "fra " + earliest.toLocaleString(earliestFormat) + " til " + latest.toLocaleString(latestFormat);
+        return "fra ".concat(earliest.toLocaleString(earliestFormat), " til ").concat(latest.toLocaleString(latestFormat));
     }
 };
 exports.default = locale;

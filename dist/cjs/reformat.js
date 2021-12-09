@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.reformat = void 0;
 var cache = {};
 function reformat(format, from, to) {
-    var cacheKey = from + ":" + to + ":" + format;
+    var cacheKey = "".concat(from, ":").concat(to, ":").concat(format);
     if (cacheKey in cache) {
         return cache[cacheKey];
     }
@@ -11,12 +11,12 @@ function reformat(format, from, to) {
     for (var _i = 0, sourceTokens_1 = sourceTokens; _i < sourceTokens_1.length; _i++) {
         var sourceToken = sourceTokens_1[_i];
         // Replace token with a temporary placeholder, e.g. '{7}'
-        format = format.replace(new RegExp(sourceToken.value, 'g'), "{" + sourceToken.id + "}");
+        format = format.replace(new RegExp(sourceToken.value, 'g'), "{".concat(sourceToken.id, "}"));
     }
     for (var _a = 0, sourceTokens_2 = sourceTokens; _a < sourceTokens_2.length; _a++) {
         var sourceToken = sourceTokens_2[_a];
         // Replace the placeholders with the destination format value
-        format = format.replace(new RegExp("\\{" + sourceToken.id + "\\}", 'g'), to[sourceToken.formatKey]);
+        format = format.replace(new RegExp("\\{".concat(sourceToken.id, "\\}"), 'g'), to[sourceToken.formatKey]);
     }
     cache[cacheKey] = format;
     return format;
