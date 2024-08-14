@@ -1,1 +1,1 @@
-export type Format = {[key: string]: string};
+export type Format = { [key: string]: string };

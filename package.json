@@ -6,6 +6,7 @@
     "types": "dist/esm/index.d.ts",
     "scripts": {
         "build": "tsc && tsc -p tsconfig.cjs.json && rimraf dist/cjs/**/*.d.ts dist/**/*.spec.* dist/**/locale/*.d.ts dist/**/locale/*.js.map",
+        "prettier": "prettier --write src/**/*.ts",
         "test": "karma start --single-run --browsers ChromeHeadless karma.config.js",
         "watch": "karma start --auto-watch --browsers ChromeDebugging karma.config.js",
         "chrome": "karma start --auto-watch --browsers Chrome karma.config.js",
@@ -31,5 +32,8 @@
     "peerDependencies": {
         "date-fns": "^2.25.0",
         "luxon": "^2.1.0 || ^3.0.0"
+    },
+    "dependencies": {
+        "prettier": "^3.3.3"
     }
 }

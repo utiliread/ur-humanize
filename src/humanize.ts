@@ -1,8 +1,10 @@
-import { DateTime, Duration } from 'luxon';
+import { DateTime, Duration } from "luxon";
 
-import { getLocale } from './locale-cache';
+import { getLocale } from "./locale-cache";
 
-let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATETIME_MED));
+let DATETIME_MED_WITHOUT_YEAR = JSON.parse(
+  JSON.stringify(DateTime.DATETIME_MED),
+);
 delete DATETIME_MED_WITHOUT_YEAR.year;
 
 let DATE_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(DateTime.DATE_MED));
@@ -14,9 +16,9 @@ delete DATE_MED_WITHOUT_YEAR.year;
  * @param base The base time
  */
 export function casualTimeAgo(instant: DateTime, base?: DateTime) {
-    const locale = getLocale(instant.locale);
+  const locale = getLocale(instant.locale);
 
-    return locale.fmtDistance(instant.toLocal(), base || DateTime.local(), 'ago');
+  return locale.fmtDistance(instant.toLocal(), base || DateTime.local(), "ago");
 }
 
 /**
@@ -25,9 +27,9 @@ export function casualTimeAgo(instant: DateTime, base?: DateTime) {
  * @param base The base time
  */
 export function casualRelativeTime(instant: DateTime, base: DateTime) {
-    const locale = getLocale(instant.locale);
+  const locale = getLocale(instant.locale);
 
-    return locale.fmtDistance(instant.toLocal(), base.toLocal(), 'relative');
+  return locale.fmtDistance(instant.toLocal(), base.toLocal(), "relative");
 }
 
 /**
@@ -35,10 +37,10 @@ export function casualRelativeTime(instant: DateTime, base: DateTime) {
  * @param duration The duration
  */
 export function casualDuration(duration: Duration) {
-    const locale = getLocale(duration.locale);
-    const base = DateTime.local();
+  const locale = getLocale(duration.locale);
+  const base = DateTime.local();
 
-    return locale.fmtDistance(base, base.plus(duration));
+  return locale.fmtDistance(base, base.plus(duration));
 }
 
 /**
@@ -46,26 +48,23 @@ export function casualDuration(duration: Duration) {
  * @param instant The instant
  */
 export function casualTime(instant: DateTime) {
-    instant = instant.toLocal();
-    
-    const diff = instant.diffNow();
+  instant = instant.toLocal();
 
-    if (Math.abs(diff.as('hours')) < 1) {
-        // Within an hour
-        return casualTimeAgo(instant);
-    }
-    else if (DateTime.local().hasSame(instant, 'day')) {
-        // Within present day: time only
-        return instant.toLocaleString(DateTime.TIME_SIMPLE);
-    }
-    else if (Math.abs(diff.as('days')) < 7) {
-        // Within +- 7 days
-        return casualTimeAgo(instant);
-    }
-    else {
-        // Else: date only
-        return instant.toLocaleString(DateTime.DATE_MED);
-    }
+  const diff = instant.diffNow();
+
+  if (Math.abs(diff.as("hours")) < 1) {
+    // Within an hour
+    return casualTimeAgo(instant);
+  } else if (DateTime.local().hasSame(instant, "day")) {
+    // Within present day: time only
+    return instant.toLocaleString(DateTime.TIME_SIMPLE);
+  } else if (Math.abs(diff.as("days")) < 7) {
+    // Within +- 7 days
+    return casualTimeAgo(instant);
+  } else {
+    // Else: date only
+    return instant.toLocaleString(DateTime.DATE_MED);
+  }
 }
 
 /**
@@ -73,41 +72,37 @@ export function casualTime(instant: DateTime) {
  * @param instant The instant
  */
 export function exactTime(instant: DateTime, includeSeconds?: boolean) {
-    instant = instant.toLocal();
+  instant = instant.toLocal();
 
-    const now = DateTime.local();
-    const hasHourComponent = +instant !== +instant.startOf('day');
-    
-    let format: Intl.DateTimeFormatOptions;
+  const now = DateTime.local();
+  const hasHourComponent = +instant !== +instant.startOf("day");
 
-    if (instant.hasSame(now, 'day')) {
-        // Time today
-        format = includeSeconds ? DateTime.TIME_WITH_SECONDS : DateTime.TIME_SIMPLE;
-    }
-    else if (instant.hasSame(now, 'year')) {
-        // Present year
-        if (hasHourComponent) {
-            // Time in present year
-            format = DATETIME_MED_WITHOUT_YEAR;
-        }
-        else {
-            // Date in present year
-            format = DATE_MED_WITHOUT_YEAR;
-        }
-    }
-    else {
-        // Other year
-        if (hasHourComponent) {
-            // Time in other year
-            format = DateTime.DATETIME_MED;
-        }
-        else {
-            // Date in other year
-            format = DateTime.DATE_MED;
-        }
-    }
+  let format: Intl.DateTimeFormatOptions;
 
-    return instant.toLocaleString(format);
+  if (instant.hasSame(now, "day")) {
+    // Time today
+    format = includeSeconds ? DateTime.TIME_WITH_SECONDS : DateTime.TIME_SIMPLE;
+  } else if (instant.hasSame(now, "year")) {
+    // Present year
+    if (hasHourComponent) {
+      // Time in present year
+      format = DATETIME_MED_WITHOUT_YEAR;
+    } else {
+      // Date in present year
+      format = DATE_MED_WITHOUT_YEAR;
+    }
+  } else {
+    // Other year
+    if (hasHourComponent) {
+      // Time in other year
+      format = DateTime.DATETIME_MED;
+    } else {
+      // Date in other year
+      format = DateTime.DATE_MED;
+    }
+  }
+
+  return instant.toLocaleString(format);
 }
 
 /**
@@ -116,69 +111,64 @@ export function exactTime(instant: DateTime, includeSeconds?: boolean) {
  * @param latest The latest instant
  */
 export function exactPeriod(earliest: DateTime, latest: DateTime) {
-    earliest = earliest.toLocal();
-    latest = latest.toLocal();
+  earliest = earliest.toLocal();
+  latest = latest.toLocal();
 
-    const now = DateTime.utc();
-    const hasHourComponent = +earliest !== +earliest.startOf('day') || +latest !== +latest.startOf('day');
+  const now = DateTime.utc();
+  const hasHourComponent =
+    +earliest !== +earliest.startOf("day") ||
+    +latest !== +latest.startOf("day");
 
-    let earliestFormat: Intl.DateTimeFormatOptions;
-    let latestFormat: Intl.DateTimeFormatOptions;
+  let earliestFormat: Intl.DateTimeFormatOptions;
+  let latestFormat: Intl.DateTimeFormatOptions;
 
-    if (earliest.hasSame(latest, 'day')) {
-        if (earliest.hasSame(now, 'day')) {
-            // Different times today
-            earliestFormat = DateTime.TIME_SIMPLE;
-            latestFormat = DateTime.TIME_SIMPLE;
-        }
-        else {
-            // Different times on same day but not today
-            earliestFormat = DateTime.DATETIME_MED;
-            latestFormat = DateTime.TIME_SIMPLE;
-        }
+  if (earliest.hasSame(latest, "day")) {
+    if (earliest.hasSame(now, "day")) {
+      // Different times today
+      earliestFormat = DateTime.TIME_SIMPLE;
+      latestFormat = DateTime.TIME_SIMPLE;
+    } else {
+      // Different times on same day but not today
+      earliestFormat = DateTime.DATETIME_MED;
+      latestFormat = DateTime.TIME_SIMPLE;
     }
-    else if (earliest.hasSame(latest, 'year')) {
-        if (earliest.hasSame(now, 'year')) {
-            // Present year
-            if (hasHourComponent) {
-                // Different times in present year
-                earliestFormat = DATETIME_MED_WITHOUT_YEAR;
-                latestFormat = DATETIME_MED_WITHOUT_YEAR;
-            }
-            else {
-                // Different dates in present year
-                earliestFormat = DATE_MED_WITHOUT_YEAR;
-                latestFormat = DATE_MED_WITHOUT_YEAR;
-            }
-        }
-        else {
-            // Other year
-            if (hasHourComponent) {
-                // Different times in same but not present year
-                earliestFormat = DateTime.DATETIME_MED;
-                latestFormat = DATETIME_MED_WITHOUT_YEAR;
-            }
-            else {
-                // Different dates in same but not present year
-                earliestFormat = DateTime.DATE_MED;
-                latestFormat = DATE_MED_WITHOUT_YEAR;
-            }
-        }
+  } else if (earliest.hasSame(latest, "year")) {
+    if (earliest.hasSame(now, "year")) {
+      // Present year
+      if (hasHourComponent) {
+        // Different times in present year
+        earliestFormat = DATETIME_MED_WITHOUT_YEAR;
+        latestFormat = DATETIME_MED_WITHOUT_YEAR;
+      } else {
+        // Different dates in present year
+        earliestFormat = DATE_MED_WITHOUT_YEAR;
+        latestFormat = DATE_MED_WITHOUT_YEAR;
+      }
+    } else {
+      // Other year
+      if (hasHourComponent) {
+        // Different times in same but not present year
+        earliestFormat = DateTime.DATETIME_MED;
+        latestFormat = DATETIME_MED_WITHOUT_YEAR;
+      } else {
+        // Different dates in same but not present year
+        earliestFormat = DateTime.DATE_MED;
+        latestFormat = DATE_MED_WITHOUT_YEAR;
+      }
     }
-    else {
-        if (hasHourComponent) {
-            // Different times in different years
-            earliestFormat = DateTime.DATETIME_MED;
-            latestFormat = DateTime.DATETIME_MED;
-        }
-        else {
-            // Different dates in different years
-            earliestFormat = DateTime.DATE_MED;
-            latestFormat = DateTime.DATE_MED;
-        }
+  } else {
+    if (hasHourComponent) {
+      // Different times in different years
+      earliestFormat = DateTime.DATETIME_MED;
+      latestFormat = DateTime.DATETIME_MED;
+    } else {
+      // Different dates in different years
+      earliestFormat = DateTime.DATE_MED;
+      latestFormat = DateTime.DATE_MED;
     }
+  }
 
-    const locale = getLocale(earliest.locale);
+  const locale = getLocale(earliest.locale);
 
-    return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
+  return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
 }
