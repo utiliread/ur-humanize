@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { Locale } from "../locale";
-import datefnsLocale from "date-fns/locale/en-US/index";
+import { enUS as datefnsLocale } from "date-fns/locale/en-US";
 import { formatDistanceStrict } from "date-fns";
 
 const locale: Locale = {

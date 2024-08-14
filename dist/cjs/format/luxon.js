@@ -23,6 +23,6 @@ exports.luxon = {
     "seconds-2": "ss",
     "milliseconds-3": "SSS",
     "timezone-1": "Z",
-    "timezone-4": "ZZ"
+    "timezone-4": "ZZ",
 };
 //# sourceMappingURL=luxon.js.map

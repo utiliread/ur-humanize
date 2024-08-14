@@ -1,2 +1,2 @@
-import { Format } from './format';
+import { Format } from "./format";
 export declare const luxon: Format;

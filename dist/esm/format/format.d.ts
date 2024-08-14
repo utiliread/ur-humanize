@@ -1,3 +1,3 @@
-export declare type Format = {
+export type Format = {
     [key: string]: string;
 };

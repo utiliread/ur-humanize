@@ -1,27 +1,25 @@
-var cache = {};
+let cache = {};
 export function reformat(format, from, to) {
-    var cacheKey = "".concat(from, ":").concat(to, ":").concat(format);
+    let cacheKey = `${from}:${to}:${format}`;
     if (cacheKey in cache) {
         return cache[cacheKey];
     }
-    var sourceTokens = getSortedSourceTokens(from, to);
-    for (var _i = 0, sourceTokens_1 = sourceTokens; _i < sourceTokens_1.length; _i++) {
-        var sourceToken = sourceTokens_1[_i];
+    let sourceTokens = getSortedSourceTokens(from, to);
+    for (let sourceToken of sourceTokens) {
         // Replace token with a temporary placeholder, e.g. '{7}'
-        format = format.replace(new RegExp(sourceToken.value, 'g'), "{".concat(sourceToken.id, "}"));
+        format = format.replace(new RegExp(sourceToken.value, "g"), `{${sourceToken.id}}`);
     }
-    for (var _a = 0, sourceTokens_2 = sourceTokens; _a < sourceTokens_2.length; _a++) {
-        var sourceToken = sourceTokens_2[_a];
+    for (let sourceToken of sourceTokens) {
         // Replace the placeholders with the destination format value
-        format = format.replace(new RegExp("\\{".concat(sourceToken.id, "\\}"), 'g'), to[sourceToken.formatKey]);
+        format = format.replace(new RegExp(`\\{${sourceToken.id}\\}`, "g"), to[sourceToken.formatKey]);
     }
     cache[cacheKey] = format;
     return format;
 }
 function getSortedSourceTokens(from, to) {
-    var id = 0;
-    var tokens = [];
-    for (var formatKey in from) {
+    let id = 0;
+    let tokens = [];
+    for (let formatKey in from) {
         if (!from.hasOwnProperty(formatKey) || !to.hasOwnProperty(formatKey)) {
             continue;
         }
@@ -32,7 +30,7 @@ function getSortedSourceTokens(from, to) {
         });
     }
     // Sort by length so that the longest tokens match first
-    tokens.sort(function (lhs, rhs) { return rhs.value.length - lhs.value.length; });
+    tokens.sort((lhs, rhs) => rhs.value.length - lhs.value.length);
     return tokens;
 }
 //# sourceMappingURL=reformat.js.map

@@ -1,4 +1,4 @@
-export var luxon = {
+export const luxon = {
     "day-of-month-1": "d",
     "day-of-month-2": "dd",
     "day-of-week-abbr": "ccc",
@@ -20,6 +20,6 @@ export var luxon = {
     "seconds-2": "ss",
     "milliseconds-3": "SSS",
     "timezone-1": "Z",
-    "timezone-4": "ZZ"
+    "timezone-4": "ZZ",
 };
 //# sourceMappingURL=luxon.js.map

@@ -15,7 +15,7 @@ delete DATE_MED_WITHOUT_YEAR.year;
  * @param instant The instant
  * @param base The base time
  */
-export function casualTimeAgo(instant: DateTime, base?: DateTime) {
+export function casualTimeAgo(instant: DateTime<true>, base?: DateTime) {
   const locale = getLocale(instant.locale);
 
   return locale.fmtDistance(instant.toLocal(), base || DateTime.local(), "ago");
@@ -26,7 +26,10 @@ export function casualTimeAgo(instant: DateTime, base?: DateTime) {
  * @param instant The instant
  * @param base The base time
  */
-export function casualRelativeTime(instant: DateTime, base: DateTime) {
+export function casualRelativeTime(
+  instant: DateTime<true>,
+  base: DateTime<true>,
+) {
   const locale = getLocale(instant.locale);
 
   return locale.fmtDistance(instant.toLocal(), base.toLocal(), "relative");
@@ -36,7 +39,7 @@ export function casualRelativeTime(instant: DateTime, base: DateTime) {
  * Format a text that looks like '1 minute'
  * @param duration The duration
  */
-export function casualDuration(duration: Duration) {
+export function casualDuration(duration: Duration<true>) {
   const locale = getLocale(duration.locale);
   const base = DateTime.local();
 
@@ -110,7 +113,7 @@ export function exactTime(instant: DateTime, includeSeconds?: boolean) {
  * @param earliest The earliest instant
  * @param latest The latest instant
  */
-export function exactPeriod(earliest: DateTime, latest: DateTime) {
+export function exactPeriod(earliest: DateTime<true>, latest: DateTime<true>) {
   earliest = earliest.toLocal();
   latest = latest.toLocal();
 

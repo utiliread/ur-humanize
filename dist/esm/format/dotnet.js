@@ -1,4 +1,4 @@
-export var dotnet = {
+export const dotnet = {
     "day-of-month-1": "d",
     "day-of-month-2": "dd",
     "day-of-week-abbr": "ddd",
@@ -20,6 +20,6 @@ export var dotnet = {
     "seconds-2": "ss",
     "milliseconds-3": "fff",
     "timezone-1": "z",
-    "timezone-4": "zzz"
+    "timezone-4": "zzz",
 };
 //# sourceMappingURL=dotnet.js.map

@@ -1,11 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exactPeriod = exports.exactTime = exports.casualTime = exports.casualDuration = exports.casualRelativeTime = exports.casualTimeAgo = void 0;
-var luxon_1 = require("luxon");
-var locale_cache_1 = require("./locale-cache");
-var DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(luxon_1.DateTime.DATETIME_MED));
+exports.casualTimeAgo = casualTimeAgo;
+exports.casualRelativeTime = casualRelativeTime;
+exports.casualDuration = casualDuration;
+exports.casualTime = casualTime;
+exports.exactTime = exactTime;
+exports.exactPeriod = exactPeriod;
+const luxon_1 = require("luxon");
+const locale_cache_1 = require("./locale-cache");
+let DATETIME_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(luxon_1.DateTime.DATETIME_MED));
 delete DATETIME_MED_WITHOUT_YEAR.year;
-var DATE_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(luxon_1.DateTime.DATE_MED));
+let DATE_MED_WITHOUT_YEAR = JSON.parse(JSON.stringify(luxon_1.DateTime.DATE_MED));
 delete DATE_MED_WITHOUT_YEAR.year;
 /**
  * Format a text that looks like '1 minute ago'
@@ -13,46 +18,43 @@ delete DATE_MED_WITHOUT_YEAR.year;
  * @param base The base time
  */
 function casualTimeAgo(instant, base) {
-    var locale = (0, locale_cache_1.getLocale)(instant.locale);
-    return locale.fmtDistance(instant.toLocal(), base || luxon_1.DateTime.local(), 'ago');
+    const locale = (0, locale_cache_1.getLocale)(instant.locale);
+    return locale.fmtDistance(instant.toLocal(), base || luxon_1.DateTime.local(), "ago");
 }
-exports.casualTimeAgo = casualTimeAgo;
 /**
  * Format a text that looks like '1 minute before'
  * @param instant The instant
  * @param base The base time
  */
 function casualRelativeTime(instant, base) {
-    var locale = (0, locale_cache_1.getLocale)(instant.locale);
-    return locale.fmtDistance(instant.toLocal(), base.toLocal(), 'relative');
+    const locale = (0, locale_cache_1.getLocale)(instant.locale);
+    return locale.fmtDistance(instant.toLocal(), base.toLocal(), "relative");
 }
-exports.casualRelativeTime = casualRelativeTime;
 /**
  * Format a text that looks like '1 minute'
  * @param duration The duration
  */
 function casualDuration(duration) {
-    var locale = (0, locale_cache_1.getLocale)(duration.locale);
-    var base = luxon_1.DateTime.local();
+    const locale = (0, locale_cache_1.getLocale)(duration.locale);
+    const base = luxon_1.DateTime.local();
     return locale.fmtDistance(base, base.plus(duration));
 }
-exports.casualDuration = casualDuration;
 /**
  * Format a text that looses precision dependening on the time from now
  * @param instant The instant
  */
 function casualTime(instant) {
     instant = instant.toLocal();
-    var diff = instant.diffNow();
-    if (Math.abs(diff.as('hours')) < 1) {
+    const diff = instant.diffNow();
+    if (Math.abs(diff.as("hours")) < 1) {
         // Within an hour
         return casualTimeAgo(instant);
     }
-    else if (luxon_1.DateTime.local().hasSame(instant, 'day')) {
+    else if (luxon_1.DateTime.local().hasSame(instant, "day")) {
         // Within present day: time only
         return instant.toLocaleString(luxon_1.DateTime.TIME_SIMPLE);
     }
-    else if (Math.abs(diff.as('days')) < 7) {
+    else if (Math.abs(diff.as("days")) < 7) {
         // Within +- 7 days
         return casualTimeAgo(instant);
     }
@@ -61,21 +63,20 @@ function casualTime(instant) {
         return instant.toLocaleString(luxon_1.DateTime.DATE_MED);
     }
 }
-exports.casualTime = casualTime;
 /**
  * Format the shortest exact text describing an instant
  * @param instant The instant
  */
 function exactTime(instant, includeSeconds) {
     instant = instant.toLocal();
-    var now = luxon_1.DateTime.local();
-    var hasHourComponent = +instant !== +instant.startOf('day');
-    var format;
-    if (instant.hasSame(now, 'day')) {
+    const now = luxon_1.DateTime.local();
+    const hasHourComponent = +instant !== +instant.startOf("day");
+    let format;
+    if (instant.hasSame(now, "day")) {
         // Time today
         format = includeSeconds ? luxon_1.DateTime.TIME_WITH_SECONDS : luxon_1.DateTime.TIME_SIMPLE;
     }
-    else if (instant.hasSame(now, 'year')) {
+    else if (instant.hasSame(now, "year")) {
         // Present year
         if (hasHourComponent) {
             // Time in present year
@@ -99,7 +100,6 @@ function exactTime(instant, includeSeconds) {
     }
     return instant.toLocaleString(format);
 }
-exports.exactTime = exactTime;
 /**
  * Format the shortest exact text describing a period
  * @param earliest The earliest instant
@@ -108,12 +108,13 @@ exports.exactTime = exactTime;
 function exactPeriod(earliest, latest) {
     earliest = earliest.toLocal();
     latest = latest.toLocal();
-    var now = luxon_1.DateTime.utc();
-    var hasHourComponent = +earliest !== +earliest.startOf('day') || +latest !== +latest.startOf('day');
-    var earliestFormat;
-    var latestFormat;
-    if (earliest.hasSame(latest, 'day')) {
-        if (earliest.hasSame(now, 'day')) {
+    const now = luxon_1.DateTime.utc();
+    const hasHourComponent = +earliest !== +earliest.startOf("day") ||
+        +latest !== +latest.startOf("day");
+    let earliestFormat;
+    let latestFormat;
+    if (earliest.hasSame(latest, "day")) {
+        if (earliest.hasSame(now, "day")) {
             // Different times today
             earliestFormat = luxon_1.DateTime.TIME_SIMPLE;
             latestFormat = luxon_1.DateTime.TIME_SIMPLE;
@@ -124,8 +125,8 @@ function exactPeriod(earliest, latest) {
             latestFormat = luxon_1.DateTime.TIME_SIMPLE;
         }
     }
-    else if (earliest.hasSame(latest, 'year')) {
-        if (earliest.hasSame(now, 'year')) {
+    else if (earliest.hasSame(latest, "year")) {
+        if (earliest.hasSame(now, "year")) {
             // Present year
             if (hasHourComponent) {
                 // Different times in present year
@@ -164,8 +165,7 @@ function exactPeriod(earliest, latest) {
             latestFormat = luxon_1.DateTime.DATE_MED;
         }
     }
-    var locale = (0, locale_cache_1.getLocale)(earliest.locale);
+    const locale = (0, locale_cache_1.getLocale)(earliest.locale);
     return locale.fmtDifference(earliest, earliestFormat, latest, latestFormat);
 }
-exports.exactPeriod = exactPeriod;
 //# sourceMappingURL=humanize.js.map

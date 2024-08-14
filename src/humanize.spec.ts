@@ -8,12 +8,11 @@ import {
   exactTime,
 } from "./humanize";
 
-import { expect } from "chai";
-import { loadLocale } from "./locale-cache";
 import { default as da } from "./locale/da";
-
-import * as datefnsLocale from "date-fns/locale/sv/index";
-import { formatDistanceStrict } from "date-fns/esm";
+import { sv as datefnsLocale } from "date-fns/locale/sv";
+import { expect } from "chai";
+import { formatDistanceStrict } from "date-fns";
+import { loadLocale } from "./locale-cache";
 
 Settings.defaultLocale = "da";
 
@@ -22,15 +21,14 @@ before("loadLocale", async () => {
 });
 
 describe("date-fns", () => {
-  it("should tranlate", () => {
+  it("should translate", () => {
     const now = DateTime.local();
     const aMinuteAgo = now.minus({ minutes: 1 });
-    console.log(datefnsLocale);
-    console.log(
-      formatDistanceStrict(aMinuteAgo.toJSDate(), now.toJSDate(), {
-        locale: <any>datefnsLocale,
-      }),
-    );
+    // console.log(datefnsLocale);
+    const result = formatDistanceStrict(aMinuteAgo.toJSDate(), now.toJSDate(), {
+      locale: datefnsLocale,
+    });
+    expect(result).to.equal("en minut");
   });
 });
 
@@ -43,7 +41,7 @@ describe("casualTimeAgo", () => {
   });
 
   it("should return 1 minut siden", () => {
-    const base = DateTime.local(2018, 1, 1);
+    const base = DateTime.local(2018, 1, 1) as DateTime<true>;
     const aMinuteBefore = base.minus({ minutes: 1 });
     const result = casualTimeAgo(aMinuteBefore, base);
 
@@ -51,7 +49,7 @@ describe("casualTimeAgo", () => {
   });
 
   it("should return om 1 minut", () => {
-    const base = DateTime.local(2018, 1, 1);
+    const base = DateTime.local(2018, 1, 1) as DateTime<true>;
     const aMinuteAfter = base.plus({ minutes: 1 });
     const result = casualTimeAgo(aMinuteAfter, base);
 
@@ -61,7 +59,7 @@ describe("casualTimeAgo", () => {
 
 describe("casualRelativeTime", () => {
   it("should return 1 minut før", () => {
-    const base = DateTime.local(2018, 1, 1);
+    const base = DateTime.local(2018, 1, 1) as DateTime<true>;
     const aMinuteBefore = base.minus({ minutes: 1 });
     const result = casualRelativeTime(aMinuteBefore, base);
 
@@ -69,7 +67,7 @@ describe("casualRelativeTime", () => {
   });
 
   it("should return 1 minut efter", () => {
-    const base = DateTime.local(2018, 1, 1);
+    const base = DateTime.local(2018, 1, 1) as DateTime<true>;
     const aMinuteAfter = base.plus({ minutes: 1 });
     const result = casualRelativeTime(aMinuteAfter, base);
 
@@ -147,7 +145,7 @@ describe("exactTime", () => {
     const instant = DateTime.local(2018, 1, 2, 3, 0, 0);
     const result = exactTime(instant);
 
-    expect(result).to.be.equal("2. jan. 03.00");
+    expect(result).to.be.equal("2. jan., 03.00");
   });
 
   it("should return date in present year", () => {
@@ -161,7 +159,7 @@ describe("exactTime", () => {
     const instant = DateTime.local(2019, 1, 1, 3, 0, 0);
     const result = exactTime(instant);
 
-    expect(result).to.be.equal("1. jan. 2019 03.00");
+    expect(result).to.be.equal("1. jan. 2019, 03.00");
   });
 
   it("should return date in other year", () => {
@@ -180,64 +178,66 @@ describe("exactPeriod", () => {
   });
 
   it("should return different times today", () => {
-    const earliest = DateTime.local(2018, 1, 1, 3, 0, 0);
-    const latest = DateTime.local(2018, 1, 1, 14, 0, 0);
+    const earliest = DateTime.local(2018, 1, 1, 3, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2018, 1, 1, 14, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
     expect(result).to.be.equal("fra 03.00 til 14.00");
   });
 
   it("should return different times on same day but not today", () => {
-    const earliest = DateTime.local(2018, 1, 2, 3, 0, 0);
-    const latest = DateTime.local(2018, 1, 2, 14, 0, 0);
+    const earliest = DateTime.local(2018, 1, 2, 3, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2018, 1, 2, 14, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
-    expect(result).to.be.equal("fra 2. jan. 2018 03.00 til 14.00");
+    expect(result).to.be.equal("fra 2. jan. 2018, 03.00 til 14.00");
   });
 
   it("should return different times in present year", () => {
-    const earliest = DateTime.local(2018, 1, 1, 3, 0, 0);
-    const latest = DateTime.local(2018, 1, 2, 14, 0, 0);
+    const earliest = DateTime.local(2018, 1, 1, 3, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2018, 1, 2, 14, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
-    expect(result).to.be.equal("fra 1. jan. 03.00 til 2. jan. 14.00");
+    expect(result).to.be.equal("fra 1. jan., 03.00 til 2. jan., 14.00");
   });
 
   it("should return different dates in present year", () => {
-    const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
-    const latest = DateTime.local(2018, 1, 2, 0, 0, 0);
+    const earliest = DateTime.local(2018, 1, 1, 0, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2018, 1, 2, 0, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
     expect(result).to.be.equal("fra 1. jan. til 2. jan.");
   });
 
   it("should return different times in same but not present year", () => {
-    const earliest = DateTime.local(2019, 1, 1, 3, 0, 0);
-    const latest = DateTime.local(2019, 1, 2, 14, 0, 0);
+    const earliest = DateTime.local(2019, 1, 1, 3, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2019, 1, 2, 14, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
-    expect(result).to.be.equal("fra 1. jan. 2019 03.00 til 2. jan. 14.00");
+    expect(result).to.be.equal("fra 1. jan. 2019, 03.00 til 2. jan., 14.00");
   });
 
   it("should return different dates in same but not present year", () => {
-    const earliest = DateTime.local(2019, 1, 1, 0, 0, 0);
-    const latest = DateTime.local(2019, 1, 2, 0, 0, 0);
+    const earliest = DateTime.local(2019, 1, 1, 0, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2019, 1, 2, 0, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
     expect(result).to.be.equal("fra 1. jan. 2019 til 2. jan.");
   });
 
   it("should return different times in different years", () => {
-    const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
-    const latest = DateTime.local(2019, 1, 1, 1, 0, 0);
+    const earliest = DateTime.local(2018, 1, 1, 0, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2019, 1, 1, 1, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
-    expect(result).to.be.equal("fra 1. jan. 2018 00.00 til 1. jan. 2019 01.00");
+    expect(result).to.be.equal(
+      "fra 1. jan. 2018, 00.00 til 1. jan. 2019, 01.00",
+    );
   });
 
   it("should return different dates in different years", () => {
-    const earliest = DateTime.local(2018, 1, 1, 0, 0, 0);
-    const latest = DateTime.local(2019, 1, 1, 0, 0, 0);
+    const earliest = DateTime.local(2018, 1, 1, 0, 0, 0) as DateTime<true>;
+    const latest = DateTime.local(2019, 1, 1, 0, 0, 0) as DateTime<true>;
     const result = exactPeriod(earliest, latest);
 
     expect(result).to.be.equal("fra 1. jan. 2018 til 1. jan. 2019");
